@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.multi.moneybug.product.OrderListDTO;
+import com.multi.moneybug.product.OrderDTO;
 
 
 @Service
@@ -32,26 +32,31 @@ public class MemberService {
         return selectedMembers; // MemberDTO 리스트 반환
     }
 	
+	public MemberDTO getMemberAllById(int userId) {
+		MemberDTO memberDTO = memberDAO.selectAllById(userId);
+		return memberDTO;
+	}
+	
 	public int findNick(String userNickname) {
 		int findResult = memberDAO.findNick(userNickname);
 		return findResult;
 	}
 	
-	public String getUserIdByUserNickname(String userNickname) {
-		String findId = memberDAO.getUserIdByUserNickname(userNickname);
-		return findId;
+	public int getUserIdByUserNickname(String userNickname) {
+		return memberDAO.getUserIdByUserNickname(userNickname);
+		
 	}
 	
 	public MemberDTO selectByNickname(String userNickname) {
 	    return memberDAO.selectByNickname(userNickname);
 	}
 
-	public int usePoint(OrderListDTO orderListDTO, MemberDTO memberDTO) {
-	    int newPoint = memberDTO.getPoint() - orderListDTO.getDiscountPrice();
-	    memberDTO.setPoint(newPoint);  
-	    return memberDAO.usePoint(memberDTO);
-	}
 	
+	
+	public int usePoint(MemberDTO memberDTO) { 
+	    return memberDAO.usePoint(memberDTO); 
+	}
+	 
 	public String getEmailByUserNickname(String userNickname) {
 		String email = memberDAO.getEmailByUserNickname(userNickname);
 		return email;

@@ -1,5 +1,6 @@
 package com.multi.moneybug.member;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.multi.moneybug.product.OrderListDTO;
+import com.multi.moneybug.product.OrderDTO;
+import com.multi.moneybug.product.OrderDiscountDTO;
+import com.multi.moneybug.product.OrderProductDTO;
 import com.multi.moneybug.product.ProductService;
 
 import lombok.extern.java.Log;
@@ -75,12 +78,53 @@ public class MemberController {
 	}
 
 	// 마이페이지로 이동 (신규, 기존회원 모두)
+	@RequestMapping("/member/myPage.do")
+	public String myPage(MemberDTO memberDTO, Model model, HttpSession session, Integer userId) {
+		String socialId = (String) session.getAttribute("socialId");
+		memberDTO.setSocialId(socialId);
 
-		@RequestMapping("/member/myPage.do")
-		public String myPage(MemberDTO memberDTO, Model model, HttpSession session) {
+		List<MemberDTO> selectedMembers = memberService.select(memberDTO); // select 메서드 실행 후 반환된 리스트
+		if (!selectedMembers.isEmpty()) {
+			MemberDTO selectedMember = selectedMembers.get(0); // 첫 번째 멤버 선택
+			model.addAttribute("email", selectedMember.getEmail());
+			model.addAttribute("userName", selectedMember.getUserName());
+			model.addAttribute("socialId", selectedMember.getSocialId());
+			model.addAttribute("point", selectedMember.getPoint());
+
+			userId = selectedMember.getUserId();
+		}
+
+		List<OrderDTO> orderlist = productService.myOrderList(userId);
+		model.addAttribute("orderlist", orderlist);
+
+		return "member/myPage";
+	}
+		
+		// 주문상세내역 모달창
+		@GetMapping("/member/getOrderDetails")
+		public String getOrderDetails(@RequestParam String orderId, Model model) {
+			List<OrderDiscountDTO> orderDiscountList = productService.getOrderDiscountByOrderId(orderId);
+			
+			// productName을 얻기위해 product와 orderDiscount 조인작업
+			List<OrderProductDTO> orderProductList = new ArrayList<>();
+		    for (OrderDiscountDTO orderDiscount : orderDiscountList) {
+		        int productId = orderDiscount.getProductId();
+		        String productName = productService.getProductNameByProductId(productId); 
+
+		        OrderProductDTO orderProduct = new OrderProductDTO(productId, productName);
+		        orderProductList.add(orderProduct);
+		    }
+		    
+			model.addAttribute("orderId", orderId);
+			model.addAttribute("orderProductList", orderProductList);
+			model.addAttribute("orderDiscountList", orderDiscountList);
+			return "member/orderDetails";
+		}
+
+		@PostMapping("/member/signUp.do")
+		public String signUp(MemberDTO memberDTO, Model model, HttpSession session) {
 			String socialId = (String) session.getAttribute("socialId");
 			memberDTO.setSocialId(socialId);
-			String userId = null;
 
 			List<MemberDTO> selectedMembers = memberService.select(memberDTO); // select 메서드 실행 후 반환된 리스트
 			if (!selectedMembers.isEmpty()) {
@@ -89,36 +133,10 @@ public class MemberController {
 				model.addAttribute("userName", selectedMember.getUserName());
 				model.addAttribute("socialId", selectedMember.getSocialId());
 				model.addAttribute("point", selectedMember.getPoint());
-
-				userId = selectedMember.getUserId();
+				model.addAttribute("userNickname",selectedMember.getUserNickname());
 			}
-
-			List<OrderListDTO> orderlist = productService.myOrderList(userId);
-			model.addAttribute("orderlist", orderlist);
-
-			return "member/myPage";
+			return "member/signUp";
 		}
-
-
-		
-		// 마이페이지로 이동 (신규, 기존회원 모두)
-				@PostMapping("/member/signUp.do")
-				public String signUp(MemberDTO memberDTO, Model model, HttpSession session) {
-					String socialId = (String) session.getAttribute("socialId");
-					memberDTO.setSocialId(socialId);
-
-					List<MemberDTO> selectedMembers = memberService.select(memberDTO); // select 메서드 실행 후 반환된 리스트
-					if (!selectedMembers.isEmpty()) {
-						MemberDTO selectedMember = selectedMembers.get(0); // 첫 번째 멤버 선택
-						model.addAttribute("email", selectedMember.getEmail());
-						model.addAttribute("userName", selectedMember.getUserName());
-						model.addAttribute("socialId", selectedMember.getSocialId());
-						model.addAttribute("point", selectedMember.getPoint());
-						model.addAttribute("userNickname",selectedMember.getUserNickname());
-					}
-					return "member/signUp";
-				}
-
 
 
 	private void setUserNicknameToSession(HttpSession session, String userNickname) {

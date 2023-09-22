@@ -6,7 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.multi.moneybug.product.OrderListDTO;
+import com.multi.moneybug.product.OrderDTO;
 
 
 	@Repository
@@ -30,12 +30,16 @@ import com.multi.moneybug.product.OrderListDTO;
 		public List<MemberDTO> select(MemberDTO memberDTO) {
 			return my.selectList("member.findall", memberDTO);
 		}
+		
+		public MemberDTO selectAllById(int userId) {
+			return my.selectOne("member.findallbyId", userId);
+		}
 
 		public int findNick(String userNickname) {
 			return my.selectOne("member.findNick", userNickname);
 		}
 		
-		public String getUserIdByUserNickname(String userNickname) {
+		public int getUserIdByUserNickname(String userNickname) {
 			 return my.selectOne("member.getUserIdByUserNickname", userNickname);
 		}
 

@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 public class MemberDTO {
-	private String userId;
-	private String socialId;
+	private int userId;
 	private String email;
 	private String userName;
+	private String socialId;
 	private String userNickname;
 	private String userLevel;
 	private int xpPoint;
