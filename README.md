@@ -2,22 +2,37 @@
 
 <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/3078e41f-5336-48df-baa3-dda11291666d" >
 
-## 🚩Introduction
+# 🧭 [목차](#index) <a name = "index"></a>
+
+- [개요](#introduction)
+- [제작기간](#period)
+- [언어 / 기술](#tech)
+- [역할](#roles)
+- [ERD](#erd)
+- [Diagram](#diagram)
+- [Trouble Shooting](#troubleshooting)
+- [Retrospective](#retrospective)  
+- [1st Refactoring](#refactoring1)
+- [2nd Refactoring](#refactoring2)
+
+<br>
+
+## 🚩Introduction <a name = "introduction"></a>
 - MoneyBug는 소셜에서 유행하는 `거지방`에 영감을 받아 만들어진 커뮤니티형 가계부 웹사이트입니다.
 - 유저의 수입과 지출을 입력하는 가계부 카테고리를 중심으로
 - 저렴한 대량 할인제품과 이벤트 제품을 판매하여 수익성을 도모하였습니다.
 - 서로의 지출 내용에 대해 함께 고민하고, 공유하며 게시글을 작성할 수 있습니다.
-- 13회차 Java 캠프 파이널 최우수상을 수상하였습니다.
+- 13회차 Java 부트캠프 **파이널 최우수상을 수상**하였습니다.
 - 이 레포지토리는 `팀프로젝트` 완료 후 팀원 민지윤이 개인적으로 리팩토링한 내용도 함께 담겨있습니다.
 
 <br>
 
-## 📆 Working Period
+## 📆 Working Period <a name = "period"></a>
 #### `2023년 7월 24일 ~ 9월 7일 (약 1개월)`
 
 <br>
 
-## 🤖 Languages & Technologies
+## 🤖 Languages & Technologies <a name = "tech"></a>
 ### `Back-end`
 * Java 8
 * Spring Framework 5.0.1, Spring MVC
@@ -53,7 +68,7 @@
 
 <br>
 
-## 💁 Roles
+## 💁 Roles <a name = "roles"></a>
 * ##### `[강태헌] 커뮤니티 게시판`
   * 커뮤니티 게시판 CRUD
   * 댓글, 대댓글 CRUD
@@ -101,35 +116,35 @@
 <br>
 
 
-## 🧭 ERD
+## 📝 ERD <a name = "erd"></a>
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/2c65db61-5752-4398-8575-2bbefedbb095">
 
-## 🧠 Main Feature Diagram
+## 🧠 Main Feature Diagram <a name = "diagram"></a>
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/b5f84af3-732f-4747-95f7-4796476bd261">
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/bdcafc2b-21be-41ae-8840-4bf7d0b9895d">
 
-## 🚀 Trouble Shooting
+## 🚀 Trouble Shooting <a name = "troubleshooting"></a>
 #### 소셜로그인 루트 통일하기
 
 
-## 📒 Retrospective
+## 📒 Retrospective <a name = "retrospective"></a>
 #### 회고, 그리고 팀프로젝트를 통해 얻은 것
 비개발적인 측면에서 팀원인 저 민지윤만의 개인적인 의견을 담았습니다.<br>
 
-#### 😃 알게된 것
+#### 💡 알게된 것
 프로젝트를 진행하면서 하나의 서비스, 웹사이트가 만들어지기까지 수많은 사람들의 고민이 쌓여야한다는 것을 알게되었습니다.
 그만큼 이 모든 팀원들의 아이디어를 협력하는 방향으로 이끌어가는 PM의 자리가 대단한 것이고, 왜 개발자로 하여금 커뮤니케이션이 그토록 중요한 역량이라고 하는 것인지도 알게되었습니다.
 
 기술도 기술이지만, 어떤 기술을 어떤 지점에서 어떻게 도입하고 커스터마이징하는 것인지는 순전히 개발자의 역량과 생각에 따른 것입니다. **이 세상에 완전히 똑같은 서비스는 없다고 생각합니다.** 그것을 이용하는 사람들과 그것을 의뢰하고 만든 사람들, 그리고 그 서비스의 시간적 차원이 완전히 동일할 수가 없기 때문입니다. 그렇기 때문에 개발자는 유연해야할 것입니다. 모든 상황과 조건에 능동적으로 대처하고 동시에 문제를 해결하는 능력을 가져야겠다고 생각했습니다.
 
-#### 🧐 아쉬운 점
+#### 💎 개선할 점
 가계부 커뮤니티는 사실 요즘 유행하는 '거지방' 커뮤니티에서 착안하여 만들어진 유머러스하고 재미난 서비스입니다. 그렇기 때문에 누구보다 유저의 참여가 `돈벌레친구들` 사이트를 더욱 '돈벌레'답게 만들어줍니다. 하지만 그 핵심 킬러컨텐츠가 될 수 있는 `살까?말까?` 게시판이 해당 게시판을 담당하는 멤버의 이탈로 인해 완성되지 못했습니다. 중도 이탈로 인해 최종 팀프로젝트에서 제외하게 되었고 이는 상당히 아쉬운 결과가 되었습니다. 
 
 우리가 모두 하나의 프로젝트를 향해 달려가는 데에 있어서의 전제는 **마감을 지키고, 결과를 완성하는 것이 기본적인 목표가 되어야할 것입니다.** 프로젝트 이후 시간이 허락하는 한 해당 게시판을 제가 스스로 만들어봐야겠다는 계획을 가지고 있습니다.
 
 또한 CSS 관련하여 의견 충돌로 인해 프로젝트 중도에 전부 깃 충돌이 나는 등 여러 힘든 점이 있었습니다. 모두가 백엔드 개발자이다보니 자신의 기능 구현에만 관심이 큰 것은 알지만, 어찌되었든 결과를 만드는 데 있어서 CSS와 자바스크립트는 반드시 거쳐가야할 요소입니다. 한 사람의 희생만으로 사이트가 만들어지는 것이 아니기 때문에 팀워크가 더욱 필요한 부분이라고 생각합니다. 저는 대부분의 UI를 담당하며 아쉬운 부분이 있었지만 혼자 학습할 수 있는 기회로 생각하였습니다.
 
-## 💎 Refactoring
+## 🔧 1st Refactoring <a name = "refactoring1"></a>
 프로젝트가 끝난 후, 저만의 리팩토링으로 프로젝트를 새롭게 빌드한 과정을 기술하였습니다.
 
 ### 1. 기존 장바구니, 결제방식의 한계 <br>
@@ -146,29 +161,29 @@ View에서 제이쿼리를 통해 이중 어레이를 사용하여 동일한 순
 
 ```javascript
 $(function() {
-		  $('#payOrder').click(function() {
-		        let IMP = window.IMP; // 생략 가능
-		        IMP.init('iamport'); // 'iamport' 대신 제공된 "제휴사 식별코드" 사용
+	$('#payOrder').click(function() {
+		let IMP = window.IMP; // 생략 가능
+		    IMP.init('iamport'); // 'iamport' 대신 제공된 "제휴사 식별코드" 사용
 		        
-		        	let orderItems = [
-		        	    <c:forEach items="${newBasketList}" var="newBasket" varStatus="status">
-		        	        <c:forEach items="${newProductList}" var="product">
-		        	            <c:if test="${newBasket.productId eq product.productId}">
-		        	                {
-		        	                    "basketSeq": "${newBasket.seq}",
-		        	                    "userId": "${newBasket.userId}",
-		        	                    "userName": "${memberDTO.userName}",
-		        	                    "address": $('#address-1').val() + " " + $('#address-2').val(),
-		        	                    "tel": $('#tel').val(),
-		        	                    "productPrice": "${product.productPrice}",
-		        	                    "discountPrice": $('#discountPrice').val(),
-		        	                    "point": $('#point').val(),
-		        	                    "totalPrice": $('#totalPrice').val()
-		        	                }<c:if test="${!status.last}">,</c:if>
-		        	            </c:if>
-		        	        </c:forEach>
+		    let orderItems = [
+		         <c:forEach items="${newBasketList}" var="newBasket" varStatus="status">
+		         <c:forEach items="${newProductList}" var="product">
+		        	    <c:if test="${newBasket.productId eq product.productId}">
+		        	         {
+		        	        "basketSeq": "${newBasket.seq}",
+		        	        "userId": "${newBasket.userId}",
+		        	        "userName": "${memberDTO.userName}",
+		        	        "address": $('#address-1').val() + " " + $('#address-2').val(),
+		        	        "tel": $('#tel').val(),
+		        	        "productPrice": "${product.productPrice}",
+		        	    	"discountPrice": $('#discountPrice').val(),
+		        	        "point": $('#point').val(),
+		        	        "totalPrice": $('#totalPrice').val()
+		        	         }<c:if test="${!status.last}">,</c:if>
+		        	        </c:if>
 		        	    </c:forEach>
-		        	];
+		         </c:forEach>
+		        ];
 
 ```
 첫 번째 리팩토링은 이렇게 JSON 배열 주고받기를 통한 데이터 구현에 목표를 두었습니다.
@@ -251,6 +266,10 @@ $(function() {
 		    }	
 		int result = productService.payOrder(orderItems);
 ```
+
+## 🔥 2nd Refactoring <a name = "refactoring2"></a>
+프로젝트가 끝난 후, 저만의 리팩토링으로 프로젝트를 새롭게 빌드한 과정을 기술하였습니다.
+
 ### 4. 실제 쇼핑몰과 같은 방식의 일대다 관계 구현
 두 번째 리팩토링은 전반적인 쇼핑몰 기능의 수정입니다. 그 이유는 위와 같은 구조가 현실적인 쇼핑몰 결제 방식을 따르지 않기 때문입니다.
 
@@ -285,10 +304,9 @@ $(function() {
 
 
 
-### 2. 스프링 시큐리티 적용
+### 6. 스프링 시큐리티 적용
 
-### 3. 로그인 이미지 통일
+### 7. 로그인 이미지 통일
 
-### 4. DB 변경 및 클린네이밍
 <br>
 
