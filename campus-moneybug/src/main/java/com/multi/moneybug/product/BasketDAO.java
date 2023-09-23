@@ -8,12 +8,14 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.multi.moneybug.member.MemberDTO;
+
 @Repository
 public class BasketDAO {
     @Autowired
     SqlSessionTemplate my;
 
-    public List<BasketDTO> getAllBaskets(String userId) {
+    public List<BasketDTO> getAllBaskets(int userId) {
         return my.selectList("basket.basket_List", userId);
     }
 
@@ -21,8 +23,8 @@ public class BasketDAO {
         my.insert("basket.addToBasket", basket);
     }
     
-    public boolean checkProductInBasket(String userId, int productId) {
-        Map<String, Object> parameters = new HashMap<>();
+    public boolean checkProductInBasket(int userId, int productId) {
+        Map<Object, Object> parameters = new HashMap<>();
         parameters.put("userId", userId);
         parameters.put("productId", productId);
 
@@ -38,7 +40,7 @@ public class BasketDAO {
 		return my.selectList("basket.order_List", selectedSeqs);
 	}
 
-	public void updateProductCount(String userId, int productId, int seq, int newCount) {
+	public void updateProductCount(int userId, int productId, int seq, int newCount) {
 		Map<String, Object> parameters = new HashMap<>();
         parameters.put("userId", userId);
         parameters.put("productId", productId);
@@ -48,16 +50,24 @@ public class BasketDAO {
         my.update("basket.updateBasket",parameters);
     }
 
-	public void deleteProductFromBasket(String userId, int productId, int seq) {
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("userId", userId);
-	    params.put("productId", productId);
-	    params.put("seq", seq);
-	    my.delete("basket.deleteProductFromBasket", params);
+	public void deleteProductFromBasket(List<Integer> usedBasketSeq) {
+	    my.delete("basket.deleteProductFromBasket", usedBasketSeq);
+	}
+	
+	public void deleteProductFromBasket(BasketDTO basketDTO) {
+		my.delete("basket.deleteProductFromBasket", basketDTO);
 	}
 
 	public List<Integer> getSeqList() {
 		return my.selectList("basket.seqList");
+	}
+	
+	public BasketDTO getBasketBySeq(int seq) {
+		return my.selectOne("basket.getBasketBySeq", seq);
+	}
+
+	public void updateBasketOrderId(BasketDTO basketDTO) {
+		my.update("basket.updateBasketOrderId",basketDTO);
 	}
 
 }

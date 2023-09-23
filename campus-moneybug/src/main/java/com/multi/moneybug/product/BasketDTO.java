@@ -5,7 +5,8 @@ import lombok.Data;
 @Data
 public class BasketDTO {
 	private int seq;
-	private String userId;
+	private int userId;
 	private int productId;
-	private int productCount;
+	private int productQuantity;
+	private String orderId;
 }
