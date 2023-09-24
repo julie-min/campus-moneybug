@@ -37,21 +37,21 @@ public class ProductService {
 		return productDAO.count();
 	}
 
-	public List<OrderListDTO> orderlist(OrderListDTO orderListDTO) {
+	public List<OrderDTO> orderlist(OrderDTO orderListDTO) {
 		return productDAO.orderlist(orderListDTO);
 	}
 
-	public boolean updateOrderStatus(String orderNumber, String newStatus) {
-	    int rowsAffected = productDAO.updateOrderStatus(orderNumber, newStatus);
+	public boolean updateOrderStatus(String orderId, String newStatus) {
+	    int rowsAffected = productDAO.updateOrderStatus(orderId, newStatus);
 	    return rowsAffected > 0; // 업데이트된 행이 있을 경우 true 반환
 	}
 
-	public List<OrderListDTO> myOrderList(String userId) {
+	public List<OrderDTO> myOrderList(int userId) {
 		return productDAO.myOrderList(userId);
 	}
 
-	public int payOrder(OrderListDTO orderListDTO) {
-		return productDAO.payOrder(orderListDTO);
+	public int payOrder(OrderDTO orderDTO) {
+		return productDAO.payOrder(orderDTO);
 		
 	}
 
@@ -63,4 +63,16 @@ public class ProductService {
 		return productDAO.updateProducts(productDTO);
 	}
 
+	public void insertOrderDiscount(OrderDiscountDTO orderDiscountDTO) {
+		productDAO.insertOrderDiscount(orderDiscountDTO);
+	}
+
+	public List<OrderDiscountDTO> getOrderDiscountByOrderId(String orderId) {
+		return productDAO.getOrderDiscountByOrderId(orderId);
+	}
+
+	public String getProductNameByProductId(int productId) {
+		return productDAO.getProductNameByProductId(productId);
+	}
+	
 }

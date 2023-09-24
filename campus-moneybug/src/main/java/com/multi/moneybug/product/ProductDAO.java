@@ -38,24 +38,24 @@ public class ProductDAO {
 		return my.selectOne("product.count");
 	}
 
-	public List<OrderListDTO> orderlist(OrderListDTO orderListDTO) {
+	public List<OrderDTO> orderlist(OrderDTO orderListDTO) {
 		return my.selectList("product.orderList");
 	}
 
-	public int updateOrderStatus(String orderNumber, String newStatus) {
+	public int updateOrderStatus(String orderId, String newStatus) {
 	    Map<String, String> paramMap = new HashMap<String, String>(); // 타입 인자 명시
-	    paramMap.put("orderNumber", orderNumber);
+	    paramMap.put("orderId", orderId);
 	    paramMap.put("newStatus", newStatus);
 	    
 	    return my.update("product.updateOrder", paramMap);
 	}
 
-	public List<OrderListDTO> myOrderList(String userId) {
+	public List<OrderDTO> myOrderList(int userId) {
 		return my.selectList("product.myOrderList",userId);
 	}
 
-	public int payOrder(OrderListDTO orderListDTO) {
-		return my.insert("product.orderInsert", orderListDTO);
+	public int payOrder(OrderDTO orderDTO) {
+		return my.insert("product.orderInsert", orderDTO);
 	}
 
 	public int delete(int productId) {
@@ -64,6 +64,18 @@ public class ProductDAO {
 
 	public int updateProducts(ProductDTO productDTO) {
 		return my.update("product.update", productDTO);
+	}
+
+	public void insertOrderDiscount(OrderDiscountDTO orderDiscountDTO) {
+		my.insert("product.insertOrderDiscount", orderDiscountDTO);
+	}
+
+	public List<OrderDiscountDTO> getOrderDiscountByOrderId(String orderId) {
+		return my.selectList("product.getOrderDiscountByOrderId", orderId);
+	}
+
+	public String getProductNameByProductId(int productId) {
+		return my.selectOne("product.getProductNameByProductId", productId);
 	}
 
 

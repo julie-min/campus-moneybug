@@ -1,24 +1,37 @@
 package com.multi.moneybug.product;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.multi.moneybug.member.MemberDTO;
 import com.multi.moneybug.member.MemberService;
+import com.multi.moneybug.product.OrderItemsDTO;
 
-import com.multi.moneybug.member.MemberDTO;
-import com.multi.moneybug.member.MemberService;
+import lombok.Data;
 
 
 @Controller
@@ -50,7 +63,7 @@ public class ProductController {
 		return "/product/shoplist"; 
 	}
 
-	// 상품 상세페이지로 이동
+	// 상품 상세페이지
 	@RequestMapping("product/shopDetail")
 	public String getProductDetail(@RequestParam("productId") int productId, Model model) {
 		ProductDTO productDTO = productService.getProductById(productId);
@@ -72,9 +85,9 @@ public class ProductController {
 
 	// 쇼핑 관리자 페이지(주문사항 list출력)
 	@RequestMapping("product/manageOrder")
-	public String goManageOrder(OrderListDTO orderListDTO,Model model) {
-		List<OrderListDTO> orderList = productService.orderlist(orderListDTO);
-		model.addAttribute("orderList", orderList);
+	public String goManageOrder(OrderDTO orderDTO,Model model) {
+		List<OrderDTO> order = productService.orderlist(orderDTO);
+		model.addAttribute("order", order);
 		return "product/manageOrder";
 	}
 
@@ -88,67 +101,74 @@ public class ProductController {
 	
 	@PostMapping("product/submitOrder")
 	public String submitOrder(ProductDTO productDTO) {
-		//TODO 체크된 항목만 가져가기
 		return "product/orderlist";
 	}
 
 	//주문서로 이동
 	@PostMapping("product/orderlist")
 	public String submitOrder(
-			@RequestParam("totalAmount") String totalAmount,
-			@RequestParam("selectedId") List<String> selectedIdsStr,
-			@RequestParam("seletedSeq") List<String> selectedSeqsStr,// 변경된 변수명
+		@RequestParam("totalAmount") String totalAmount,
+		@RequestParam("selectedId") List<String> selectedIdsStr,
+		@RequestParam("seletedSeq") List<String> selectedSeqsStr,// 변경된 변수명
+		ProductDTO productDTO,
+		MemberDTO memberDTO, 
+		BasketDTO basketDTO, 
+		Model model, 
+		HttpSession session) {
 
-			ProductDTO productDTO, MemberDTO memberDTO, BasketDTO basketDTO, Model model, HttpSession session
+			//int형으로 형변환
+			List<Integer> selectedIds = new ArrayList<>();       
+			for (String idStr : selectedIdsStr) {
+				selectedIds.add(Integer.parseInt(idStr));
+			}
 
-			) {
+			//int형으로 형변환
+			List<Integer> selectedSeqs = new ArrayList<>();       
+			for (String idStr : selectedSeqsStr) {
+				selectedSeqs.add(Integer.parseInt(idStr));
+			}
 
-		//int형으로 형변환
-		List<Integer> selectedIds = new ArrayList<>();       
-		for (String idStr : selectedIdsStr) {
-			selectedIds.add(Integer.parseInt(idStr));
+			List<BasketDTO> newBasketList = basketService.getOrderlists(selectedSeqs);        
+			// selectedIds를 이용하여 필요한 처리 수행
+			List<ProductDTO> newProductList = productService.getProductsByIds(selectedIds);     
+
+			String userNickname = (String) session.getAttribute("userNickname");
+
+			if (userNickname != null && !userNickname.isEmpty()) {
+				memberDTO.setUserNickname(userNickname);
+				MemberDTO member = memberService.selectByNickname(memberDTO.getUserNickname());
+				memberDTO.setUserId(member.getUserId());
+				memberDTO.setEmail(member.getEmail());
+				memberDTO.setPoint(member.getPoint());
+				memberDTO.setUserName(member.getUserName());
+				memberDTO.setUserNickname(member.getUserNickname());
+			} else {
+				System.out.println("session없음");
+			}
+
+			model.addAttribute("newBasketList", newBasketList);
+			model.addAttribute("newProductList", newProductList);
+			model.addAttribute("totalAmount", totalAmount);
+			model.addAttribute("selectedSeqs", selectedSeqs);
+			model.addAttribute("selectedIds", selectedIds);
+			model.addAttribute("memberDTO", memberDTO);
+		/*
+		 * System.out.println("newBasketList "+newBasketList); // basketDTO의 리스트형
+		 * System.out.println("newProductList "+newProductList); // productDTO의 리스트형
+		 * System.out.println("memberDTO "+memberDTO); // productDTO의 리스트형
+		 * System.out.println("selectedSeqs "+selectedSeqs); // 장바구니번호 리스트형
+		 * System.out.println("selectedIds "+selectedIds); // 상품번호 리스트형
+		 */			
+			return "product/orderlist"; 
 		}
-
-		//int형으로 형변환
-		List<Integer> selectedSeqs = new ArrayList<>();       
-		for (String idStr : selectedSeqsStr) {
-			selectedSeqs.add(Integer.parseInt(idStr));
-		}
-
-		List<BasketDTO> orderlist = basketService.getOrderlists(selectedSeqs);        
-		// selectedIds를 이용하여 필요한 처리 수행
-		List<ProductDTO> productlist = productService.getProductsByIds(selectedIds);     
-
-		String userNickname = (String) session.getAttribute("userNickname");
-
-		if (userNickname != null && !userNickname.isEmpty()) {
-			/* MemberDTO memberDTO1 = new MemberDTO(); */
-			memberDTO.setUserNickname(userNickname);
-			MemberDTO member = memberService.selectByNickname(memberDTO.getUserNickname());
-			memberDTO.setUserId(member.getUserId());
-			memberDTO.setEmail(member.getEmail());
-			memberDTO.setPoint(member.getPoint());
-			memberDTO.setUserName(member.getUserName());
-			memberDTO.setUserNickname(member.getUserNickname());
-		} else {
-			System.out.println("session없음");
-		}
-
-		model.addAttribute("orderlist", orderlist);
-		model.addAttribute("productlist", productlist);
-		model.addAttribute("totalAmount", totalAmount);
-		model.addAttribute("member", memberDTO);
-		model.addAttribute("basket", basketDTO);
-		return "product/orderlist"; // orderlist.jsp와 매핑되는 뷰 이름
-	}
 
 	@PostMapping("product/updateOrderStatus")
-	public String updateOrderStatus(@ModelAttribute("orderNumber") String orderNumber,
-			@ModelAttribute("newStatus") String newStatus,
-			Model model, OrderListDTO orderListDTO) {
+	public String updateOrderStatus(@ModelAttribute("orderId") String orderId,
+		@ModelAttribute("newStatus") String newStatus,
+			Model model, OrderDTO orderDTO) {
 
 		// 주문 상태 업데이트 로직을 호출하여 주문 상태 업데이트 처리
-		boolean updateResult = productService.updateOrderStatus(orderNumber, newStatus);
+		boolean updateResult = productService.updateOrderStatus(orderId, newStatus);
 
 		// 업데이트 결과에 따라 메시지 설정
 		String message;
@@ -160,28 +180,100 @@ public class ProductController {
 		model.addAttribute("updateMessage", message);
 
 		// 주문 목록을 다시 가져와 모델에 추가
-		List<OrderListDTO> orderList = productService.orderlist(orderListDTO);
-		model.addAttribute("orderList", orderList);
+		List<OrderDTO> order = productService.orderlist(orderDTO);
+		model.addAttribute("order", order);
 
 		return "product/manageOrder"; // 주문 관리 페이지로 리다이렉트
-	}
-
-	//결제 후 이동
-	@PostMapping("product/paySuccess.do") 
-	@ResponseBody
-	public String payOrder(OrderListDTO orderListDTO, MemberDTO memberDTO, Model model, BasketDTO basketDTO, HttpSession session, String userId, int productId, @RequestParam("seqList") String seqList){ 
-		int result = productService.payOrder(orderListDTO);
-		String[] seqStr = seqList.split(",");
-		for(String s : seqStr) {
-			int seq = Integer.parseInt(s);
-			basketService.deleteProductFromBasket(userId,productId,seq);
 		}
-		String userNickname = (String) session.getAttribute("userNickname");
-		memberDTO.setUserNickname(userNickname);
-		memberService.usePoint(orderListDTO, memberDTO);
-		return result + ""; 
+		
+	// 결제 후 결제내역 저장
+	@Transactional
+	@CrossOrigin
+	@PostMapping(value = "product/paySuccess", produces = "application/json")
+	@ResponseBody
+	public int payOrder(@RequestBody List<OrderItemsDTO> OrderItemsList, HttpSession session) throws Exception {
+
+		//1. order 신규쿼리생성
+		 OrderItemsDTO firstOrderItemsDTO = OrderItemsList.get(0);
+		//첫번째 배열만 사용 (공통되는 값들만 사용)
+		 OrderDTO orderDTO = new OrderDTO();
+		    orderDTO.setUserId(firstOrderItemsDTO.getUserId());
+		    orderDTO.setUserName(firstOrderItemsDTO.getUserName());
+		    orderDTO.setAddress(firstOrderItemsDTO.getAddress());
+		    orderDTO.setTel(firstOrderItemsDTO.getTel());
+		    orderDTO.setUsedPoint(firstOrderItemsDTO.getUsedPoint());
+		    orderDTO.setPayPrice(firstOrderItemsDTO.getPayPrice());
+	        
+		    // 동일한 주문에 대해 같은 ID를 사용하기 위해 저장
+	        String orderId = generateOrderId();
+	        session.setAttribute("orderId", orderId);
+	        orderDTO.setOrderId(orderId);
+	    
+			productService.payOrder(orderDTO);
+		
+			
+		//2. 포인트 마일리지 차감
+		MemberDTO memberDTO = memberService.selectByNickname(firstOrderItemsDTO.getUserNickname());
+		
+		int newPoint = memberDTO.getPoint() - firstOrderItemsDTO.getUsedPoint();
+		memberDTO.setPoint(newPoint);
+		
+		memberService.usePoint(memberDTO);
+		
+		//3. 장바구니 업데이트
+		for (OrderItemsDTO basketOrderItemsDTO : OrderItemsList) {
+		    int seq = basketOrderItemsDTO.getSeq();
+		    BasketDTO basketDTO = basketService.getBasketBySeq(seq);
+
+		    if (basketDTO != null) {
+		    	String basketorderId = (String) session.getAttribute("orderId");
+		        basketDTO.setOrderId(basketorderId);
+		        basketService.updateBasketOrderId(basketDTO);
+		    }
+		}
+		
+		//4. 개별 영수금액 계산 및 order_discount 인서트
+		String orderIdforDiscount = (String) session.getAttribute("orderId");
+		int sellPriceSum = OrderItemsList.stream()
+		        .mapToInt(item -> item.getProductSellprice() * item.getProductQuantity())
+		        .sum();
+
+	    for (OrderItemsDTO orderItemsDTO : OrderItemsList) {
+	        int productId = orderItemsDTO.getProductId();
+	        int productSellprice = orderItemsDTO.getProductSellprice();
+	        int productQuantity = orderItemsDTO.getProductQuantity();
+
+	        // indivDiscount 계산
+	        int indivDiscount = (int) (((double) (productSellprice * productQuantity) / sellPriceSum) * orderItemsDTO.getUsedPoint());
+
+	        int productCalprice = (productSellprice * productQuantity) - indivDiscount;
+
+	        OrderDiscountDTO orderDiscountDTO = new OrderDiscountDTO();
+	        orderDiscountDTO.setOrderId(orderIdforDiscount);
+	        orderDiscountDTO.setProductId(productId);
+	        orderDiscountDTO.setProductSellprice(productSellprice);
+	        orderDiscountDTO.setProductQuantity(productQuantity);
+	        orderDiscountDTO.setIndivDiscount(indivDiscount);
+	        orderDiscountDTO.setProductCalprice(productCalprice);
+
+	        productService.insertOrderDiscount(orderDiscountDTO);
+		}
+		 
+		session.removeAttribute("orderId");
+		return 1;
 	}
 	
+	// 함수로 현재 날짜와 랜덤 숫자를 조합하여 생성하는 코드
+	private String generateOrderId() {
+	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+	    String currentDate = dateFormat.format(new Date());
+	    Random random = new Random();
+	    int randomNumber = random.nextInt(1000); // 0부터 999 중 랜덤 숫자 생성
+	    return currentDate + String.format("%03d", randomNumber);
+	}
+
+
+	 
 	@RequestMapping("product/manageDelete")
 	public String goManageDelete(int productId) {
 		productService.goManageDelete(productId);
@@ -193,7 +285,6 @@ public class ProductController {
 	public String goManageUpdate(int productId, Model model) {
 	    // productId를 이용하여 수정할 상품 정보를 가져오는 로직을 추가
 	    ProductDTO product = productService.getProductById(productId);
-	    System.out.println("실행");
 	    // 가져온 상품 정보를 모델에 추가
 	    model.addAttribute("product", product);
 

@@ -1,4 +1,4 @@
-package com.multi.moneybug.product;
+ package com.multi.moneybug.product;
 
 import lombok.Data;
 
@@ -10,7 +10,8 @@ public class ProductDTO {
 	private String productName;
 	private String productImg;
 	private int productOriprice;
-	private int productPrice;
+	private int indivDiscount;
+	private int productSellprice;
 	private String productInfo;
 	
 }
