@@ -49,6 +49,12 @@
 			alias="basketDTO"></typeAlias>
 		<typeAlias type="com.multi.moneybug.product.ProductPageDTO"
 			alias="productpageDTO"></typeAlias>
+		<typeAlias type="com.multi.moneybug.product.OrderDTO"
+			alias="orderDTO"></typeAlias>
+		<typeAlias type="com.multi.moneybug.product.OrderDiscountDTO"
+			alias="orderDiscountDTO"></typeAlias>
+		<typeAlias type="com.multi.moneybug.product.OrderItemsDTO"
+			alias="orderItemsDTO"></typeAlias>
 
 		<!--openApi mybatis -->
 		<typeAlias type="com.multi.moneybug.openApi.OpenApiDTO"

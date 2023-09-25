@@ -9,26 +9,36 @@
 		<result property="productName" column="productName" />
 		<result property="productImg" column="productImg" />
 		<result property="productOriprice" column="productOriprice" />
-		<result property="productPrice" column="productPrice" />
+		<result property="indivDiscount" column="indivDiscount" />
+		<result property="productSellprice" column="productSellprice" />
 		<result property="productInfo" column="productInfo" />
 	</resultMap>
 
 	<resultMap id="orderListMap"
-		type="com.multi.moneybug.product.OrderListDTO">
-		<id property="orderNumber" column="orderNumber" />
-		<result property="basketSeq" column="basketSeq" />
+		type="com.multi.moneybug.product.OrderDTO">
+		<id property="orderSeq" column="orderSeq" />
+		<result property="orderId" column="orderId" />
 		<result property="userId" column="userId" />
 		<result property="orderAt" column="orderAt" />
 		<result property="userName" column="userName" />
 		<result property="address" column="address" />
 		<result property="tel" column="tel" />
-		<result property="price" column="price" />
-		<result property="discountPrice" column="discountPrice" />
-		<result property="totalPrice" column="totalPrice" />
+		<result property="usedPoint" column="usedPoint" />
+		<result property="payPrice" column="payPrice" />
 		<result property="payTool" column="payTool" />
 		<result property="orderStatus" column="orderStatus" />
-
 	</resultMap>
+	
+ 	<resultMap id="orderDiscountMap"
+		type="com.multi.moneybug.product.OrderDiscountDTO">
+		<id property="seq" column="seq" />
+		<result property="orderId" column="orderId" />
+		<result property="productId" column="productId" />
+		<result property="productSellprice" column="productSellprice" />
+		<result property="productQuantity" column="productQuantity" />
+		<result property="indivDiscount" column="indivDiscount" />
+		<result property="productCalprice" column="productCalprice" />
+	</resultMap> 
 
 	<select id="product_List" resultMap="productResultMap"
 		parameterType="productpageDTO">
@@ -69,31 +79,47 @@
 		useGeneratedKeys="true">
 		insert into product
 		values (null,#{productType}, #{productName}, #{productImg},
-		#{productOriprice}, #{productPrice}, #{productInfo})
+		#{productOriprice}, #{indivDiscount}, #{productSellprice}, #{productInfo})
 	</insert>
 	
 	<select id="orderList" resultMap="orderListMap">
-		select * from order_list
+		select * from `order`
 	</select>
 	
 	<select id="myOrderList" resultMap="orderListMap">
-		select * from order_list where USER_ID = #{userId}
+		select * from `order` where USER_ID = #{userId}
 	</select>
 	
+ 	<select id="getOrderDiscountByOrderId" parameterType="string" resultMap="orderDiscountMap">
+		select * from `order_discount`
+		where ORDER_ID = #{orderId}
+	</select> 
+	
+ 	<select id="getProductNameByProductId" parameterType="int" resultType="String">
+		select PRODUCT_NAME from `product`
+		where PRODUCT_ID = #{productId}
+	</select> 
+	
 	<update id="updateOrder" parameterType="java.util.Map">
-	    update order_list
+	    update `order`
 	    set order_status = #{newStatus}
-	    WHERE ORDER_NUMBER = #{orderNumber}
+	    WHERE ORDER_ID = #{orderId}
 	</update>
 
 	<insert id="orderInsert"
-		parameterType="com.multi.moneybug.product.OrderListDTO">
-		INSERT INTO order_list
-		VALUES (null, #{basketSeq},
-		#{userId}, CURRENT_TIMESTAMP, #{userName},
-		#{address}, #{tel},
-		#{price}, #{discountPrice}, #{totalPrice},
-		"inicis","배송준비")
+		parameterType="com.multi.moneybug.product.OrderDTO">
+		INSERT INTO `order` VALUES
+		(null,
+		#{orderId},
+		#{userId}, 
+		CURRENT_TIMESTAMP, 
+		#{userName},
+		#{address}, 
+		#{tel},
+		#{usedPoint}, 
+		#{payPrice},
+		"inicis",
+		"배송준비")
 	</insert>
 	
 	<delete id="delete" parameterType="int">
@@ -101,14 +127,29 @@
 		where PRODUCT_ID = #{productId}
 	</delete>
 	
-	<update id="update" parameterType="productDTO">
+	<update id="update" parameterType="com.multi.moneybug.product.ProductDTO">
 	  update product
-	  set PRODUCT_NAME = #{productName},
+	  set
+	  PRODUCT_TYPE = #{productType},
+	  PRODUCT_NAME = #{productName},
 	  PRODUCT_IMG = #{productImg},
 	  PRODUCT_ORIPRICE = #{productOriprice},
-	  PRODUCT_PRICE = #{productPrice},
+	  INDIV_DISCOUNT = #{indivDiscount},
+	  PRODUCT_SELLPRICE = #{productSellprice},
 	  PRODUCT_INFO = #{productInfo}
 	  where PRODUCT_ID = #{productId}
 	</update>
+	
+ 	<insert id="insertOrderDiscount" 
+		parameterType="com.multi.moneybug.product.OrderDiscountDTO">
+		INSERT INTO `order_discount` VALUES
+		(null,
+		#{orderId},
+		#{productId}, 
+		#{productSellprice}, 
+		#{productQuantity}, 
+		#{indivDiscount}, 
+		#{productCalprice})
+	</insert>
 	
 </mapper>

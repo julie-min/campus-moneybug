@@ -27,12 +27,19 @@
 		where SOCIAL_ID = #{socialId}
 	</select>
 	
+	<select id="findallbyId" parameterType="int"
+		resultType="MemberDTO">
+		select *
+		from user_member
+		where USER_ID = #{USER_ID}
+	</select>
+	
 	<select id="findNick" parameterType="String" resultType="int">
 		select count(*) from user_member
 		where USER_NICKNAME = #{userNickname}
 	</select>
 	
-	<select id="getUserIdByUserNickname" parameterType="String" resultType="String">
+	<select id="getUserIdByUserNickname" parameterType="String" resultType="int">
         SELECT user_id
         FROM user_member
         WHERE user_nickname = #{userNickname}
@@ -51,7 +58,7 @@
 		WHERE user_nickname = #{userNickname}
 	</update>
 
-    	<select id="getEmailByUserNickname" parameterType="String" resultType="String">
+    <select id="getEmailByUserNickname" parameterType="String" resultType="String">
         SELECT EMAIL
         FROM user_member
         WHERE user_nickname = #{userNickname}

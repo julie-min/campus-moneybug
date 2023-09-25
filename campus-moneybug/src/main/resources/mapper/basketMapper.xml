@@ -6,41 +6,46 @@
         <id property="seq" column="seq"/>
         <result property="userId" column="user_id"/>
         <result property="productId" column="product_id"/>
-        <result property="productCount" column="product_count"/>
+        <result property="productQuantity" column="product_quantity"/>
+        <result property="orderId" column="order_id"/>
     </resultMap>
 
-    <select id="basket_List" parameterType="String" resultMap="basketResultMap">
+	<!-- orderId가 null값인 (아직 주문완료되지않은) 장바구니 상태만 전부 출력함 -->
+    <select id="basket_List" parameterType="Integer" resultMap="basketResultMap">
         SELECT *
         FROM basket
-        WHERE user_id = #{userId}
+        WHERE user_id = #{userId} AND order_id IS NULL
     </select>
 
-    <!-- 장바구니에 상품이 있는지 체크하는 쿼리 -->
+    <!-- orderId가 null인 것들중 (주문하지 않은것들중) 장바구니에 상품이 있는지 체크하는 쿼리 -->
     <select id="checkProductInBasket" parameterType="java.util.Map" resultType="java.lang.Integer">
         SELECT COUNT(*) FROM basket
         WHERE user_id = #{userId}
         AND product_id = #{productId}
+        AND order_id IS NULL
     </select>
 
-    <!-- 장바구니에 상품 업데이트하는 쿼리 -->
+    <!-- 장바구니에 넣을때: 이미 있는 경우, 상품 업데이트하는 쿼리 -->
     <update id="updateProductInBasket" parameterType="java.util.Map">
         UPDATE basket
-        SET product_count = product_count + #{productCount}
+        SET product_quantity = product_quantity + #{productQuantity}
         WHERE user_id = #{userId}
         AND product_id = #{productId}
+        AND order_id IS NULL
     </update>
     
-    <!-- 장바구니에서 수량 업데이트하는 쿼리 -->
+    <!-- 장바구니에서 수량을 업데이트 하는 쿼리 -->
     <update id="updateBasket" parameterType="java.util.Map">
         UPDATE basket
-        SET product_count = #{newCount}
+        SET product_quantity = #{newCount}
         WHERE SEQ = #{seq} AND user_id = #{userId} AND product_id = #{productId}
         
     </update>
 
+	<!-- 장바구니에 신규 레코드 삽입 -->
     <insert id="addToBasket" parameterType="com.multi.moneybug.product.BasketDTO">
-        INSERT INTO basket (user_id, product_id, product_count)
-        VALUES (#{userId}, #{productId}, #{productCount})
+        INSERT INTO basket (user_id, product_id, product_quantity)
+        VALUES (#{userId}, #{productId}, #{productQuantity})
     </insert>
 
     <select id="order_List" parameterType="java.util.List" resultMap="basketResultMap">
@@ -60,6 +65,18 @@
     <select id="seqList" resultType="Integer">
         SELECT SEQ FROM basket;
     </select>
+    
+    <select id="getBasketBySeq" parameterType="Integer" resultType="BasketDTO">
+        SELECT *
+        FROM basket
+        WHERE SEQ = #{seq}
+    </select>
+    
+    <update id="updateBasketOrderId" parameterType="BasketDTO">
+        UPDATE basket
+    	SET ORDER_ID = #{orderId}
+    	WHERE seq = #{seq}
+    </update>
 
 
 </mapper>
