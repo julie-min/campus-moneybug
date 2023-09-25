@@ -57,8 +57,12 @@
 	        <input type="number" class="form-control" id="productOriprice" name="productOriprice" ></div>
 	        
 	        <div class="mb-3">
+	        <label for="productPrice">상품할인금액(원):</label><br>
+	        <input type="number" class="form-control" id="indivDiscount" name="indivDiscount" required></div>
+	        
+	        <div class="mb-3">
 	        <label for="productPrice">제품 판매가(원):</label><br>
-	        <input type="number" class="form-control" id="productPrice" name="productPrice" required></div>
+	        <input type="number" class="form-control" id="productSellprice" name="productSellprice" required></div>
 	        
 	        <div class="mb-3">
 	        <label for="productInfo">제품 설명:</label><br>

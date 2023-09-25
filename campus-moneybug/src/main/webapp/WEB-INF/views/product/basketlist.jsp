@@ -86,8 +86,8 @@ $(document).ready(function() {
 		let productId;
 		let seq;
 		let newCount;
-		let seqList = [];
-		let idList = [];
+		let seqList = []; /* 장바구니번호 배열화 */
+		let idList = []; /* 상품번호 배열화 */
 		countinput = $('#hiddenNumber').val();
 		for(let i = 1 ; i <=countinput ; i ++){
 			newCount = $('#product_count' +i).val();
@@ -98,8 +98,6 @@ $(document).ready(function() {
             	seqList.push($('#productSeq' +i).val());
             	idList.push($('#productId' +i).val());
             }
-			console.log(idList)
-			console.log(seqList)
 			
 		$.ajax({
 			url : "${pageContext.request.contextPath}/updateQuantity",
@@ -132,8 +130,7 @@ function deleteProduct(userNickname, productId, seq) {
                 
             },
             success: function(response) {
-            	alert(response)
-                alert("상품 삭제 성공");
+            	/* alert(response)*/
                 window.location.href = '${pageContext.request.contextPath}/product/basketlist';
             },
             error: function(error) {
@@ -153,7 +150,7 @@ function deleteProduct(userNickname, productId, seq) {
 	<div class="basket-container">
 		<div class="user-container d-flex flex-column align-items-center">
 			<c:if test="${not empty userNickname}">
-				<h2>${userNickname}님의장바구니</h2>
+				<h2>${userNickname}님의 장바구니</h2>
 				<c:choose>
 					<c:when test="${basketIsEmpty}">
 						<div style="margin-top: 20px;">
@@ -206,11 +203,12 @@ function deleteProduct(userNickname, productId, seq) {
 													src="${s3}/resources/products/${product.productImg}"
 													" alt="Product Image" width="150px" height="150px" /></td>
 												<td>${product.productName}</td>
-												<td id="productPrice_<c:out value="${countnumber}"/>">${product.productPrice}</td>
+												<td id="productPrice_<c:out value="${countnumber}"/>">${product.productSellprice}</td>
 												<td><input type="number"
-													class="form-control text-center"
+													class="form-control text-center" 
 													id="product_count<c:out value="${countnumber}"/>"
-													value="${basket.productCount}" min="" required></td>
+													value="${basket.productQuantity}" min="" required></td>
+													
 												<td id="product_total<c:out value="${countnumber}"/>"
 													class="productTotal" />
 												</td>
@@ -238,15 +236,13 @@ function deleteProduct(userNickname, productId, seq) {
 						<div class="orderSum">
 							총 주문 금액: <span id="totalAmount">${totalAmount}원</span>
 						</div>
-						<input id="hiddenNumber" value="<c:out value="${countnumber}"/>"
-							type="hidden">
+						<input id="hiddenNumber" value="<c:out value="${countnumber}"/>" type="hidden"> <!-- 상품의 갯수 -->
 						<div class="d-flex justify-content-center mt-3">
-							<input type="hidden" id="totalAmount2" name="totalAmount"
-								value="${totalAmount}"> <input type="hidden"
-								id="selectedId_" name="selectedId" value="${productId}" /> <input
-								type="hidden" id="seletedSeq_" name="seletedSeq"
-								value="${basket.seq}" />
+							<input type="hidden" id="totalAmount2" name="totalAmount" value="${totalAmount}"> <!-- 총합계 -->
+							<input type="hidden" id="selectedId_" name="selectedId" value="${productId}" /> <!-- 상품번호 리스트 -->
+							<input type="hidden" id="seletedSeq_" name="seletedSeq" value="${basket.seq}" /> <!-- 장바구니번호 리스트 -->
 							<button type="submit" class="btn btn-lg btn-secondary" id="order">주문하기</button>
+						</div>
 					</c:otherwise>
 				</c:choose>
 		</div>
