@@ -36,8 +36,12 @@
                 <input type="number" class="form-control" id="productOriprice" name="productOriprice" value="${product.productOriprice}">
             </div>
             <div class="form-group">
-                <label for="productPrice">제품 판매가(원):</label>
-                <input type="number" class="form-control" id="productPrice" name="productPrice" required value="${product.productPrice}">
+                <label for="indivDiscount">개별할인금액(원):</label>
+                <input type="number" class="form-control" id="indivDiscount" name="indivDiscount" required value="${product.indivDiscount}">
+            </div>
+            <div class="form-group">
+                <label for="productSellprice">제품 판매가(원):</label>
+                <input type="number" class="form-control" id="productSellprice" name="productSellprice" required value="${product.productSellprice}">
             </div>
             <div class="form-group">
                 <label for="productInfo">제품 설명:</label>
