@@ -22,7 +22,8 @@
 				<td>${product.productName}</td>
 				<td>${product.productImg}</td>
 				<td>${product.productOriprice}</td>
-				<td>${product.productPrice}</td>
+				<td>${product.indivDiscount}</td>
+				<td>${product.productSellprice}</td>
 				<td>${product.productInfo}</td>
 				<td><button class="btn btn-dark" onclick="location.href='../product/manageUpdate?productId=${product.productId}'">상품 수정</button></td>
 				<td><button class="btn btn-dark" onclick="location.href='../product/manageDelete?productId=${product.productId}'">상품 삭제</button></td>

@@ -9,11 +9,10 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <title>돈벌레 관리자 페이지</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css"
-	rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
 <style>
 body {
 	background-color: #F9F5E7;
@@ -56,33 +55,33 @@ th, td {
 			<table class="table table-hover">
 				<thead>
 					<tr>
-						<th>주문번호</th>
-						<th>주문 날짜</th>
+						<th>주문 번호</th>
+						<th>주문자 아이디</th>
+						<th>주문시간</th>
 						<th>주문자 이름</th>
 						<th>주소</th>
-						<th>전화번호</th>
-						<th>최종금액</th>
-						<th>결제수단</th>
+						<th>사용한 마일리지</th>
+						<th>결제 금액</th>
 						<th>주문상태</th>
-						<th>주문변경</th>
 					</tr>
 				</thead>
 				<tbody>
-					<c:forEach items="${orderList}" var="order">
+					<c:forEach items="${order}" var="order">
 						<tr>
-							<td>${order.orderNumber}</td>
+							<td>${order.orderId}</td>
+							<td>${order.userId}</td>
 							<td>${order.orderAt}</td>
 							<td>${order.userName}</td>
 							<td>${order.address}</td>
-							<td>${order.tel}</td>
-							<td>${order.totalPrice}</td>
+							<td>${order.usedPoint}</td>
+							<td>${order.payPrice}</td>
 							<td>${order.payTool}</td>
 							<td>${order.orderStatus}</td>
 							<td>
-								<form id="statusForm${order.orderNumber}" method="post"
+								<form id="statusForm${order.orderId}" method="post"
 									action="updateOrderStatus">
-									<input type="hidden" name="orderNumber"
-										value="${order.orderNumber}" /> <select name="newStatus">
+									<input type="hidden" name="orderId"
+										value="${order.orderId}" /> <select name="newStatus">
 										<option value="배송준비"
 											${order.orderStatus == '배송준비' ? 'selected' : ''}>배송준비</option>
 										<option value="배송중"
@@ -101,19 +100,18 @@ th, td {
 		</div>
 	</div>
 	<script>
-		function submitStatusForm(orderNumber) {
-			var form = document.getElementById(`statusForm${orderNumber}`);
+		function submitStatusForm(orderId) {
+			var form = document.getElementById(`statusForm${orderId}`);
 			form.submit();
 		}
 
-		function updateAllOrderStatus(orderNumber) {
+		function updateAllOrderStatus(orderId) {
 			var forms = document.querySelectorAll('form');
 			forms.forEach(function(form) {
-				submitStatusForm(orderNumber);
+				submitStatusForm(orderId);
 			});
 		}
 	</script>
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
