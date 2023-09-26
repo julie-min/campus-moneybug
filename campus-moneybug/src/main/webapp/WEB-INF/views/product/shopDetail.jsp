@@ -96,7 +96,7 @@ $(document).ready(function() {
         }
     });
 
-    // 장바구니 버튼 클릭 시
+    // 장바구니에 넣기 버튼 클릭 시
     $(".cart-button").click(function() {
         var productId = ${productDTO.productId};
         var userNickname = "<%= session.getAttribute("userNickname") %>";
@@ -171,7 +171,7 @@ function addToCart(productId, userNickname, count) {
 				</c:if>
 			</div>
 			<div class="product-price">
-				<fmt:formatNumber type="number" value="${productDTO.productPrice}"
+				<fmt:formatNumber type="number" value="${productDTO.productSellprice}"
 					pattern="#,###" />
 				원
 			</div>

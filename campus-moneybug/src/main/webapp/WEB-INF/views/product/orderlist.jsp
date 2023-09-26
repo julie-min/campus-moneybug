@@ -61,8 +61,7 @@ body {
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script>
-	let seqListSize =0;
-	let seqList="";
+
 	function execDaumPostcode() {
 		new daum.Postcode({
 			oncomplete : function(data) {
@@ -75,9 +74,9 @@ body {
 	$(document).ready(function() {
 	    $("#applyPoint").click(function(event) {
 	        event.preventDefault(); 
+	        var totalAmount = <%= request.getAttribute("totalAmount") %>;
 	        var discountPrice = parseInt($("#discountPrice").val()) || 0;
 	        var maxDiscount = parseInt($("#discountPrice").attr("max")) || 0; // 최대값 가져오기
-	        var totalAmount = <%= request.getAttribute("totalAmount") %>;
 	        
 	        // discountPrice가 max보다 크면 max 값으로 설정
 	        if (discountPrice > maxDiscount) {
@@ -91,19 +90,41 @@ body {
 	        }
 
 	        $("#totalPrice").val(totalPrice); 
+	        
 	    });
 	});
 
-	   
-	   $(function() {
-		    $('#payOrder').click(function() {
-				seqListSize = $('#hiddenSeqCount').val();
-        		seqList = $('#basketSeq1').val();
-        		for(let i = 2; i<=seqListSize ; i ++){
-        		    seqList = $('#basketSeq'+i).val() + "," + seqList;
-        		}
-		        var IMP = window.IMP; // 생략 가능
+	
+	
+	$(function() {
+		  $('#payOrder').click(function() {
+ 	        	let OrderItemsList = [
+ 	        		<c:forEach items="${newBasketList}" var="newBasket" varStatus="status">
+	        	        <c:forEach items="${newProductList}" var="newProduct">
+	        	            <c:if test="${newBasket.productId eq newProduct.productId}">
+	        	                {
+	        	                    "address": $('#address-1').val() + " " + $('#address-2').val(),
+	        	                    "payPrice": $('#totalPrice').val(),
+	        	                    "productId": "${newProduct.productId}",
+	        	                    "productName": "${newProduct.productName}",
+	        	                    "productOriprice": "${newProduct.productOriprice}",
+	        	                    "productSellprice": "${newProduct.productSellprice}",
+	        	                    "productQuantity": "${newBasket.productQuantity}",
+	        	                    "seq": "${newBasket.seq}",
+	        	                    "tel": $('#tel').val(),
+	        	                    "usedPoint": $('#discountPrice').val(),
+	        	                    "userId": "${newBasket.userId}",
+	        	                    "userName": "${memberDTO.userName}",
+	        	                    "userNickname": "${memberDTO.userNickname}"
+	        	                }<c:if test="${!status.last}">,</c:if>
+	        	            </c:if>
+	        	        </c:forEach>
+	        	    </c:forEach>
+	        	];
+	        
+		        let IMP = window.IMP; // 생략 가능
 		        IMP.init('iamport'); // 'iamport' 대신 제공된 "제휴사 식별코드" 사용
+		        
 		        IMP.request_pay({
 		            pg: 'inicis', // 1.1.0 버전부터 지원됨
 		            pay_method: 'card',
@@ -117,31 +138,19 @@ body {
 		            buyer_postcode: $('#zip-code').val(),
 		        }, function(rsp) {
 		            if (rsp.success) {
-		        		
-		                //[1] imp_uid를 서버 측에서 결제정보를 조회하기 위해 jQuery ajax로 전달
+		                // imp_uid를 서버 측에서 결제정보를 조회하기 위해 jQuery ajax로 전달
 		                jQuery.ajax({
-		                    url: "paySuccess.do",
+		                    url: "paySuccess",
 		                    type: 'POST',
-		                    dataType: 'text',
-		                    data: {
-		                        imp_uid: rsp.imp_uid,
-		                        seqList: seqList,
-		                        "userId": $('#userId').val(),
-		                        "userName": $('#userName').val(),
-		                        "address": $('#address-1').val() +" "+ $('#address-2').val(),
-		                        "tel": $('#tel').val(),
-		                        "price": $('#price').val(),
-		                        "discountPrice": $('#discountPrice').val(),
-		                        "totalPrice": rsp.paid_amount,
-		                        "socialId": $('#socialId').val(),
-		                        "email": $('#email').val(),
-		                        "point": $('#point').val(),
-		                        "productId" : $('#productId').val()
-		                    }
-		                }).done(function(data) {
-		                	alert(data)
-		                    //[2] 결제 정보가 확인되고 서버에서 정상적인 서비스 루틴을 사용하는 경우
-		                    if (data == '1') {
+		                    crossDomain: true,
+		                    contentType: 'application/json',
+		                    dataType : "json",
+		                    traditional : true,
+		                    data:JSON.stringify(OrderItemsList)
+		                })
+						
+						.done(function(data) {
+		                    if (data == 1) {
 		                        var msg = '결제가 완료되었습니다.';
 		                       /*  msg += '\n고유 ID: ' + rsp.imp_uid;
 		                        msg += '\n상점 거래 ID: ' + rsp.merchant_uid;
@@ -151,8 +160,6 @@ body {
 		                        alert(msg);
 		                        location.href = '/moneybug/main.jsp';
 		                    } else {
-		                        //[3] 결제가 아직 제대로 이루어지지 않았습니다.
-		                        //[4] 요청한 금액과 다른 금액으로 결제가 자동 취소되었습니다.
 		                       alert("fail!"); 
 		                    }
 		                });
@@ -207,17 +214,17 @@ body {
 						</tr>
 					</thead>
 					<tbody>
-						<c:forEach items="${orderlist}" var="order">
-							<c:forEach items="${productlist}" var="product">
-								<c:if test="${order.productId eq product.productId}">
+						<c:forEach items="${newBasketList}" var="newBasket">
+							<c:forEach items="${newProductList}" var="product">
+								<c:if test="${newBasket.productId eq product.productId}">
 									<tr>
 										<td>${product.productType}</td>
 										<td><img src="${s3}/resources/products/${product.productImg}"" alt="Product Image"
 											width="150px" height="150px" /></td>
 										<td>${product.productName}</td>
-										<td id="productPrice_${product.productId}">${product.productPrice}</td>
-										<td id="productCount_${product.productId}">${order.productCount}</td>
-										<td>${product.productPrice * order.productCount}</td>
+										<td id="productPrice_${product.productId}">${product.productSellprice}</td>
+										<td id="productCount_${product.productId}">${newBasket.productQuantity}</td>
+										<td>${product.productSellprice * newBasket.productQuantity}</td>
 										
 									</tr>
 								</c:if>
@@ -225,20 +232,14 @@ body {
 						</c:forEach>
 					</tbody>
 				</table>
-
-			<!-- <form action="paySuccess" method="post"> -->
-		
-				<div class="form-group row">
+				
+				<%-- <div class="form-group row">
 					<label for="basketSeq" class="col-sm-8 col-form-label"> 장바구니 번호</label>
 					<div class="col-sm-4">
 						<div class="input-group">
-								<c:set var="stepnumber" value="1" />
-								<c:set var="countnumber" value="0" />
 						<c:forEach items="${orderlist}" var="order">
-								<c:set var="countnumber" value="${countnumber+stepnumber}" />
-							<input type="number" class="form-control" id="basketSeq<c:out value="${countnumber}"/>" name="basketSeq" value="${order.seq}" readonly>
-							</c:forEach>
-							<input type="hidden" id="hiddenSeqCount" value="<c:out value="${countnumber}"/>">
+							<input type="number" class="form-control" id="basketSeq" name="basketSeq" value="${newBasket.seq}" readonly>
+						</c:forEach>
 						</div>
 					</div>
 				</div>
@@ -247,11 +248,12 @@ body {
 					<div class="col-sm-4">
 						<div class="input-group">
 						<c:forEach items="${orderlist}" var="order">
-							<input type="number" class="form-control" id="productId" name="productId" value="${order.productId}" readonly>
+							<input type="number" class="form-control" id="productId" name="productId" value="${newBasket.productId}" readonly>
 						</c:forEach>
 						</div>
 					</div>
 				</div>
+				
 				<div class="form-group row">
 					<label for="userId" class="col-sm-8 col-form-label"> 회원 아이디</label>
 					<div class="col-sm-4">
@@ -259,12 +261,13 @@ body {
 							<input type="text" class="form-control" id="userId" name="userId" value="${orderlist[0].userId}" readonly>
 						</div>
 					</div>
-				</div>
+				</div> --%>
+				
 				<div class="form-group row">
 					<label for="userName" class="col-sm-8 col-form-label"> 회원 이름</label>
 					<div class="col-sm-4">
 						<div class="input-group">
-							<input type="text" class="form-control" id="userName" name="userName" value="${member.userName}" readonly>
+							<input type="text" class="form-control" id="userName" name="userName" value="${memberDTO.userName}" readonly>
 						</div>
 					</div>
 				</div>
@@ -285,7 +288,7 @@ body {
 					<label for="point" class="col-sm-8 col-form-label"> 현재 나의 포인트</label>
 					<div class="col-sm-4">
 						<div class="input-group">
-							<input type="text" class="form-control" id="point" value="${member.point }" readonly>
+							<input type="text" class="form-control" id="point" value="${memberDTO.point }" readonly>
 							<div class="input-group-append">
 								<span class="input-group-text">P</span>
 							</div>
@@ -299,7 +302,7 @@ body {
 					<div class="col-sm-4">
 						<div class="input-group">
 							<input type="number" class="form-control" id="discountPrice"
-								name="discountPrice" max="${member.point}" min="0" step="5" value="0"/>
+								name="discountPrice" max="${memberDTO.point}" min="0" step="5" value="0"/>
 							<button type="button" class="btn btn-danger" id="applyPoint">적용</button>
 						</div>
 					</div>
