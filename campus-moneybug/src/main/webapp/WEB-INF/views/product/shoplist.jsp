@@ -118,7 +118,7 @@ body {
         // 세션에 userNickname 정보가 있는지 확인
         var userNickname = "<%= session.getAttribute("userNickname") %>";
         
-        if (userNickname != "null") {	
+        if (userNickname != "null") {	/* 로그인이 되어있다면  */
             var count = 1; //메인에서는 하나만 가능
             addToCart(productId, userNickname, count);
         } else if (userNickname = "null") {
@@ -209,7 +209,7 @@ body {
                                 <c:if test="${product.productOriprice != 0}">
                                     <del class="red-strike"><span style="color: red;"><fmt:formatNumber type="number" value="${product.productOriprice}" pattern="#,###"/></span></del>
                                 </c:if>
-                                <fmt:formatNumber type="number" value="${product.productPrice}" pattern="#,###"/>원
+                                <fmt:formatNumber type="number" value="${product.productSellprice}" pattern="#,###"/>원
                             </div>
                         </div>
                     </div>
