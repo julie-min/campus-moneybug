@@ -7,6 +7,7 @@
 - [개요](#introduction)
 - [언어 / 기술](#tech)
 - [역할](#roles)
+- [결과물](#output)
 - [ERD](#erd)
 - [Diagram](#diagram)
 - [Pain Point](#login)
@@ -32,6 +33,9 @@
 <br>
 
 ## 🤖 Languages & Technologies <a name = "tech"></a>
+<details>
+<summary> 펼쳐서 확인 (👈 Click) </summary>
+
 ### `Back-end`
 * Java 8
 * Spring Framework 5.0.1, Spring MVC
@@ -63,11 +67,14 @@
 * Clova OCR
 * I'mport
 * Google chart API
-
+</details>
 
 <br>
 
 ## 💁 Roles <a name = "roles"></a>
+<details>
+<summary> 펼쳐서 확인 (👈 Click) </summary>
+
 * ##### `[강태헌] 커뮤니티 게시판`
   * 커뮤니티 게시판 CRUD
   * 댓글, 대댓글 CRUD
@@ -99,9 +106,12 @@
   * 월간 예산과 고정 지출 설정
   * 월단위 사용한 내역 형식 보고서 산출
   * 보고서 파일 다운로드, 이메일 전송
+</details>
 
 
 <br>
+
+## 🔎 결과물 미리보기 <a name = "output"></a>
 
 | **로그인, 마이페이지** |
 | :---------------------: |
@@ -120,7 +130,6 @@
 
 <br>
 
-
 ## 📝 ERD <a name = "erd"></a>
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/2c65db61-5752-4398-8575-2bbefedbb095">
 
@@ -129,15 +138,16 @@
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/bdcafc2b-21be-41ae-8840-4bf7d0b9895d">
 
 ## 🎯 Pain Point (Login) <a name = "login"></a>
-### 소셜로그인 코드, 어떻게 더 쉽고 한 눈에 보기좋게 할까?
+## 소셜로그인 코드, 어떻게 더 쉽고 깔끔하게 만들까?
 > 소셜로그인 루트 통일하여 다양한 API 받기
 
 이번 프로젝트에서는 원래 단일 소셜로그인만 기획하였습니다. <br>
-그러다 모든 로그인 루트를 통일하고 과정을 일원화하여 3가지 소셜로그인 API를 사용, 편리성을 도모할 수 있었습니다.<br>
-네이버, 카카오의 경우 콜백페이지를 구성하여 데이터를 받았고, <br> 구글 로그인의 경우 JWT를 사용하여 파서하였습니다.<br>
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cef6a5e5-7aea-4c67-9ffd-1da6bbd9733a" width="600"> <br>
+그러다 모든 로그인 루트를 통일하고 과정을 일원화하여 3가지 소셜로그인 API를 모두 사용하고,<br>
+편리성을 도모할 수 있었습니다.<br>
+네이버, 카카오의 경우 콜백페이지를 구성하여 데이터를 받았습니다. <br> 구글 로그인의 경우 JWT를 사용하여 파서하였습니다.<br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cef6a5e5-7aea-4c67-9ffd-1da6bbd9733a" > <br>
 각 API의 자체함수들은 서로 변수명도 다르고, 설령 같은 변수명이어도 의미가 달랐습니다.<br>
-먼저 로그인에 필요한 각각의 변수를 찾아 제3의 객체로 치환하였고, 그 과정을 `AJAX`를 통해 동일한 메서드로 유도하였습니다.<br>
+먼저 로그인에 필요한 각각의 변수를 찾아 제3의 객체로 치환하였고, <br>그 과정을 `AJAX`를 통해 동일한 메서드로 유도하였습니다.<br>
 이러한 방식으로 무수히 많은 다양한 소셜로그인 API를 추가할 수 있을 것입니다.
 별도의 자체 회원DB를 운영하지 않기 때문에 Social ID (JWT) 값을 세션으로 설정하였습니다. <br>
 첫 로그인시, 중복을 검색하여 첫방문시 포인트 1,000원 + 필수 닉네임 설정으로 잡았습니다.
@@ -145,6 +155,9 @@
 ## 📒 Retrospective <a name = "retrospective"></a>
 #### 회고, 그리고 팀프로젝트를 통해 얻은 것
 팀원인 저 민지윤만의 개인적인 의견을 담았습니다.<br>
+
+<details>
+<summary> 펼쳐서 확인 (👈 Click) </summary>
 
 #### 💡 세상에 완전히 똑같은 서비스는 없다
 프로젝트를 진행하면서 하나의 서비스, 웹사이트가 만들어지기까지 수많은 사람들의 고민이 쌓여야한다는 것을 알게되었습니다.
@@ -163,14 +176,18 @@
 
 또한 자신이 처음 기획하지 않은 상대방의 코드를 임의로 수정하지 않고 반드시 그 개발자의 처음 의도와 목적을 이해해야할 것입니다. 코드 컨벤션을 지키는 것은 물론이며, 디테일한 주석을 통해 코드의 방향성이 흐트러지지 않아야 합니다. 상대방의 코드에 대한 존중이 반드시 필요한 작업임을 느꼈습니다.
 
+</details>
+
 ---
+
+<br>
 
 # 🚀 1st Refactoring : 1차 리팩토링 <a name = "refactoring1"></a>
 프로젝트가 끝난 후, 저만의 리팩토링으로 프로젝트를 새롭게 빌드한 과정을 기술하였습니다.
 
 ## 1-1. 기존 장바구니, 결제방식의 한계 <br>
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/c871e2be-7e83-4e0e-babb-7eb8a1bfd765"> <br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/c871e2be-7e83-4e0e-babb-7eb8a1bfd765" width="500"> <br>
 기존의 결제 과정에서는 주문한 상품들의 첫번째 상품을 대표상품으로 값을 저장하였습니다. <br> 이는 장바구니를 주문으로 불러들일 때 어레이 값으로 전송하는 값이 지정이 제대로 되지 않아 첫번째 값만 읽어들였기 때문입니다.<br>
 
 
@@ -218,31 +235,28 @@ $(function() {
 
 네이밍 관련해서도 쉽게 알아볼 수 있도록 변수명을 `newProductList`, `usedBasketSeq`, `memberOrderInfo`등으로 재정립하여 유지보수의 편리성을 도모하였습니다.
 ```java
-	@PostMapping("product/orderlist")
-	public String submitOrder(
-		@RequestParam("totalAmount") String totalAmount,
-		@RequestParam("selectedId") List<String> selectedIdsStr,
-		@RequestParam("seletedSeq") List<String> selectedSeqsStr,// 변경된 변수명
+@PostMapping("product/orderlist")
+public String submitOrder(
+	@RequestParam("totalAmount") String totalAmount,
+	@RequestParam("selectedId") List<String> selectedIdsStr,
+	@RequestParam("seletedSeq") List<String> selectedSeqsStr,
 		ProductDTO productDTO,
 		MemberDTO memberDTO, 
 		BasketDTO basketDTO, 
 		Model model, 
 		HttpSession session) {
 
-			//int형으로 형변환
 			List<Integer> selectedIds = new ArrayList<>();       
 			for (String idStr : selectedIdsStr) {
 				selectedIds.add(Integer.parseInt(idStr));
 			}
 
-			//int형으로 형변환
 			List<Integer> selectedSeqs = new ArrayList<>();       
 			for (String idStr : selectedSeqsStr) {
 				selectedSeqs.add(Integer.parseInt(idStr));
 			}
 
 			List<BasketDTO> newBasketList = basketService.getOrderlists(selectedSeqs);        
-			// selectedIds를 이용하여 필요한 처리 수행
 			List<ProductDTO> newProductList = productService.getProductsByIds(selectedIds);     
 
 			String userNickname = (String) session.getAttribute("userNickname");
@@ -268,32 +282,32 @@ $(function() {
 
 다만, 장바구니에서부터 넘어온 선택한 상품들은 복수개로써 이를 리스트로 표현하면 리스트 안에 배열이 n개 있는 상태입니다. 즉 `basketDTO`와 `productDTO`는 리스트로 오고, `memberDTO`는 1명의 유저 정보가 배열로 들어왔습니다. 여러개의 리스트가 섞이다보니 서버단에서 `memberOrderInfo`를 통해 새로운 배열을 만들어 사용자의 정보만을 추출하여 결제내역 저장에 이용하였습니다. 
 ```java
-	@PostMapping("product/paySuccess") 
-	@ResponseBody
-	public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession session){ 
+@PostMapping("product/paySuccess") 
+@ResponseBody
+public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession session){ 
 		
-		/* 결제내역 중 사용자에 관한 정보를 추출 */
-		List<String> memberOrderInfo = new ArrayList<>();
-		if (!orderItems.isEmpty()) {
-		        OrderListDTO userInfo = orderItems.get(0);
+	/* 결제내역 중 사용자에 관한 정보를 추출 */
+	List<String> memberOrderInfo = new ArrayList<>();
+	if (!orderItems.isEmpty()) {
+		OrderListDTO userInfo = orderItems.get(0);
 
-		        String infos = String.format(
-		            "userId=%s, userName=%s, address=%s, tel=%s, discountPrice=%s, totalPrice=%s",
-		            userInfo.getUserId(), userInfo.getUserName(), userInfo.getAddress(),
-		            userInfo.getTel(), userInfo.getDiscountPrice(), userInfo.getTotalPrice()
-		        );
+		String infos = String.format(
+		"userId=%s, userName=%s, address=%s, tel=%s, discountPrice=%s, totalPrice=%s",
+		userInfo.getUserId(), userInfo.getUserName(), userInfo.getAddress(),
+		userInfo.getTel(), userInfo.getDiscountPrice(), userInfo.getTotalPrice()
+		);
 
-		        memberOrderInfo.add(infos);
-		    }	
-		int result = productService.payOrder(orderItems);
+		memberOrderInfo.add(infos);
+	}	
+	int result = productService.payOrder(orderItems);
 ```
 
 ---
 
 # 🚀 2nd Refactoring : 2차 리팩토링 <a name = "refactoring2"></a>
 
-## 2-1. 실제 쇼핑몰과 같은 방식의 일대다 관계 구현
-두 번째 리팩토링은 전반적인 쇼핑몰 기능의 수정입니다. 그 이유는 위와 같은 구조가 현실적인 쇼핑몰 결제 방식을 따르지 않기 때문입니다.
+## 2-1. 나의 고민 : 진짜 쇼핑몰은 이렇게 계산되지 않아!
+두 번째 리팩토링은 전반적인 쇼핑몰 기능의 수정입니다. 그 이유는 기존의 구조가 현실적인 쇼핑몰 결제 방식을 따르지 않기 때문입니다.
 
 그림넣기
 
