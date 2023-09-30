@@ -348,12 +348,13 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 다시 개별 배열에 `add`하여 한번에 `insert` 하는 방식으로 만들었습니다.
 
 ## 2-4. 최종 결제완료 페이지
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/10b1ae6e-e8e6-4cfb-9e49-967d3bf14b74">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/d46be171-804b-414f-bfbd-8fdb8085693e">
 
 
 # 🚀 3rd Refactoring : 3차 리팩토링 <a name = "refactoring3"></a>
 
 ## 3-1. Spring Security 적용
+세션으로 사용하고 있던 소셜로그인을 `Spring Security`를 도입하여 보안을 강화하였습니다.
 
 ## 3-2. Azure 배포
 
