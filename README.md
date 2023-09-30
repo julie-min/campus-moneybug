@@ -187,13 +187,13 @@
 
 ## 1-1. 기존 장바구니, 결제방식의 한계 <br>
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/c871e2be-7e83-4e0e-babb-7eb8a1bfd765" width="500"> <br>
 기존의 결제 과정에서는 주문한 상품들의 첫번째 상품을 대표상품으로 값을 저장하였습니다. <br> 이는 장바구니를 주문으로 불러들일 때 어레이 값으로 전송하는 값이 지정이 제대로 되지 않아 첫번째 값만 읽어들였기 때문입니다.<br>
 
+상품을 세부선택하는 과정이 2차례 들어가다보니, 복잡한 리스트의 형태가 된 것이 문제였습니다. <br> 예컨대, 10개의 상품 중 5개를 장바구니에 넣고, 유저는 장바구니에서도 상품을 3개만 선택하여 주문할 수 있습니다. <br>
+
+JSON 배열로 데이터를 전송하여 여러 개의 값이 동시에 넘어갈 수 있도록 하였습니다.
 
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/a94180fe-b2da-4f2d-896b-9c50284bd0e3"> <br>
-
-상품을 세부선택하는 과정이 2차례 들어가다보니, 복잡한 리스트의 형태가 된 것이 문제였습니다. <br> 예컨대, 10개의 상품 중 5개를 장바구니에 넣고, 유저는 장바구니에서도 상품을 3개만 선택하여 주문할 수 있습니다. <br>
 
 장바구니에서 상품선택은 물론 수량을 최종 확정할 수 있기 때문에, 필수적으로 리스트의 형태로 선택시마다 업데이트를 해주는 컨트롤러를 만들었습니다. 그리고 그 리스트를 주문서의 View에서 다시 분해하여 해당 요소들을 모두 나열한 뒤, 다시 결제에 필요한 요소들만 추려 JSON 배열로 서버에 전달하는 것입니다.
 
@@ -240,38 +240,18 @@ public String submitOrder(
 	@RequestParam("totalAmount") String totalAmount,
 	@RequestParam("selectedId") List<String> selectedIdsStr,
 	@RequestParam("seletedSeq") List<String> selectedSeqsStr,
-		ProductDTO productDTO,
-		MemberDTO memberDTO, 
-		BasketDTO basketDTO, 
+		...(중략)... 
 		Model model, 
 		HttpSession session) {
 
-			List<Integer> selectedIds = new ArrayList<>();       
-			for (String idStr : selectedIdsStr) {
-				selectedIds.add(Integer.parseInt(idStr));
-			}
-
-			List<Integer> selectedSeqs = new ArrayList<>();       
-			for (String idStr : selectedSeqsStr) {
-				selectedSeqs.add(Integer.parseInt(idStr));
-			}
+			...(중략)...
 
 			List<BasketDTO> newBasketList = basketService.getOrderlists(selectedSeqs);        
 			List<ProductDTO> newProductList = productService.getProductsByIds(selectedIds);     
 
 			String userNickname = (String) session.getAttribute("userNickname");
 
-			if (userNickname != null && !userNickname.isEmpty()) {
-				memberDTO.setUserNickname(userNickname);
-				MemberDTO member = memberService.selectByNickname(memberDTO.getUserNickname());
-				memberDTO.setUserId(member.getUserId());
-				memberDTO.setEmail(member.getEmail());
-				memberDTO.setPoint(member.getPoint());
-				memberDTO.setUserName(member.getUserName());
-				memberDTO.setUserNickname(member.getUserNickname());
-			} else {
-				System.out.println("session없음");
-			}
+			...(중략)...
 
 			model.addAttribute("newBasketList", newBasketList);
 			model.addAttribute("newProductList", newProductList);
@@ -280,7 +260,9 @@ public String submitOrder(
 ## 1-3. 결제시 주문내역 저장의 효율성 도모
 결제 후에 고객의 주문내역을 저장하기 위해서, 결제 과정에서 총 3번의 절차를 만들었습니다. 기존에는 `memberDTO`, `basketDTO`,`productDTO` 모두를 주문서로 넘겨 그 데이터들을 `orderlist`로 만드는 것이었습니다. 하지만 View 자바스크립트를 통해 주문내역에 저장이 되어야하는 요소들만 추려 배열 형식의 JSON을 만들었고, 이를 `OrderListDTO` 라는 이름으로 넘겨주었습니다. <br>
 
-다만, 장바구니에서부터 넘어온 선택한 상품들은 복수개로써 이를 리스트로 표현하면 리스트 안에 배열이 n개 있는 상태입니다. 즉 `basketDTO`와 `productDTO`는 리스트로 오고, `memberDTO`는 1명의 유저 정보가 배열로 들어왔습니다. 여러개의 리스트가 섞이다보니 서버단에서 `memberOrderInfo`를 통해 새로운 배열을 만들어 사용자의 정보만을 추출하여 결제내역 저장에 이용하였습니다. 
+request를 직접 핸들링 하지 않고, `JSON`으로 넘어온 정보들을 `Jackson` 라이브러리를 사용하여 DTO에 넣었습니다.
+
+특히, 장바구니에서부터 넘어온 선택한 상품들은 복수개로써 이를 리스트로 표현하면 리스트 안에 배열이 n개 있는 상태입니다. 즉 `basketDTO`와 `productDTO`는 리스트로 오고, `memberDTO`는 1명의 유저 정보가 배열로 들어왔습니다. 여러개의 리스트가 섞이다보니 서버단에서 `memberOrderInfo`를 통해 새로운 배열을 만들어 사용자의 정보만을 추출하여 결제내역 저장에 이용하였습니다. 
 ```java
 @PostMapping("product/paySuccess") 
 @ResponseBody
@@ -307,9 +289,11 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 # 🚀 2nd Refactoring : 2차 리팩토링 <a name = "refactoring2"></a>
 
 ## 2-1. 나의 고민 : 진짜 쇼핑몰은 이렇게 계산되지 않아!
-두 번째 리팩토링은 전반적인 쇼핑몰 기능의 수정입니다. 그 이유는 기존의 구조가 현실적인 쇼핑몰 결제 방식을 따르지 않기 때문입니다.
+두 번째 리팩토링은 전반적인 쇼핑몰 기능의 수정입니다. <br>그 이유는 기존의 구조가 현실적인 쇼핑몰 결제 방식을 따르지 않기 때문입니다.
 
-그림넣기
+아래 그림에서 보실 수 있듯, 기존 쇼핑몰 주문내역은 고객으로 하여금 의미없는 백엔드의 시퀀스 넘버를 보여주고 있고, 각 상품별 할인액을 도출하지 않고 있었습니다.
+
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/8c77a2ac-b875-4958-b621-73a961de41fa">
 
 저는 네이버 D2C몰을 직접 운영하고 ERP에 로직을 도입한 경험이 있고, 카페24를 통해 브랜드몰을 제작한 경험도 있습니다. 이러한 경험으로 위 그림과 같이 여러개의 장바구니 번호와 할인금액이 1개의 주문목록에 나열되는 것은 이상한 방식이라고 생각이 들었습니다. 실제 쇼핑몰에서는 `할인`을 기준으로 기능을 세분화해야만 한다고 생각합니다.
 
@@ -319,6 +303,12 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 저는 대중적으로 익숙한 `네이버 쇼핑`의 표준방식을 따라 `전체할인` 역시 그 비율로 할인을 매기는 기능을 도입하였습니다.
 
+이를 위해서는 전반적인 페이지와 컨트롤러별 코드 흐름이 변경되어야 합니다.
+
+## 2-2. 계산서 금액을 제대로 구한다
+
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/122ca473-ee9b-4c43-ae7c-f59d4277b44a">
+
 ```
 - 정가: PRODUCT_ORIPRICE
 - 개별 상품할인: INDIV_DISCOUNT
@@ -327,26 +317,35 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 - 개별 할인환산: INDIV_DISCOUNT
 - 영수 금액계산: PRODUCT_CALPRICE
 ```
+이렇게 영수금액을 정하게 된 이유는,
+주문 단계에서 각 상품의 할인 금액이 마일리지(포인트) 사용에 따라 `동적으로` 결정되기 때문입니다.
 
-이를 도입하기 위해서 기존의 장바구니, 주문 테이블의 개선시켜 DB차원에서의 업데이트를 해야만 했습니다.
-
-주문 단계에서 각 상품의 할인 금액이 마일리지 사용에 따라 동적으로 결정되는 상황이군요. 이 경우에는 주문과 상품 간의 다대다 관계가
-
-1. 여러상품들 중 장바구니에 담고싶은것만 담으면 주문번호 null로 해서 장바구니 행들이 생긴다. 
-2. 장바구니에서 상품들을 선택해서 주문을 하면 장바구니 테이블에 해당 장바구니 번호들에 해당하는 데이터들에는 주문번호가 생기고 동시에 안보이게 처리된다.
-3. 주문테이블에는 주문번호가 생긴 데이터들의 행이 생기는데 그 행들에는 장바구니 번호는 기재되지 않는다. 주문테이블에 장바구니에 관련한 정보는 없다.
-4. 주문테이블에는 1번 결제한 결제내역과 관련해서 전체 결제 금액이 있다. 
-5. 즉, 주문테이블에는 각각 상품의 금액이 있는게 아니라 전체 결제 금액만이 있다.
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/ac22fbee-e05b-4db9-bc8c-6b63b7f17b76">
 
 
-## 2-2. 영수금액 계산
-
+1. 기본적으로 모든 상품은 판매자가 1차 할인하여 상품목록에 게시된다. (최초 주문 금액)
+2. 고객이 n개의 상품을 장바구니에 담고싶은 것만 담으면 주문번호 null로 해서 장바구니가 생긴다. <br>이때 1차 선택이 이루어지며, 상품과 장바구니는 일대일 관계일 것이다.
+3. 장바구니에서 다시 n개의 상품들을 선택(2차 선택)해서 주문서로 이동
+4. 주문서에서 자신의 포인트를 사용하여 2차 할인을 받게 된다.
+5. 전체 금액에서 포인트만큼 할인된 금액이 결제된다.
+6. 결제 완료시 장바구니 테이블에 해당 장바구니 번호들에 해당하는 데이터들에는 주문번호가 생기고 동시에 안보이게 처리된다.
+7. 주문테이블에는 주문번호가 생긴 데이터들의 행이 생긴다.
+8. 위에 적은 영수금액 계산 함수에 따라 각 상품금액의 실제 할인적용된 금액이 주문 히스토리에 저장된다.
 
 
 ## 2-3. DB 업데이트 및 트랜잭션 설정
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cc3aee34-2e0c-4c93-9860-8c145056d8e8"> <br>
+결제와 동시에 모든 것들이 처리되는 구조상 이를 트랜잭션으로 설정하여<br>
+주문 신규 쿼리 처리와, 마일리지 차감, 장바구니 처리, 영수금액 함수계산을 동시에 진행하였습니다.
+
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cc3aee34-2e0c-4c93-9860-8c145056d8e8"> <br>
 
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/29121d93-7824-427c-b4e2-a373fba0425f"> <br>
+
+신규 쿼리에 대한 부담과 번거로움을 줄이기 위해,<br>
+개별 리스트로 `insert` 후 전체 계산 금액을 `insert`  하는 방식에서 벗어나<br>
+리스트 객체를 생성하여 거기에 전체 계산 금액을 `add` 하고,<br>
+개별 객체만 불러와 영수계산 함수로 환산한 뒤
+다시 개별 배열에 `add`하여 한번에 `insert` 하는 방식으로 만들었습니다.
 
 # 🚀 3rd Refactoring : 3차 리팩토링 <a name = "refactoring3"></a>
 
