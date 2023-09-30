@@ -183,7 +183,7 @@
 <br>
 
 # 🚀 1st Refactoring : 1차 리팩토링 <a name = "refactoring1"></a>
-프로젝트가 끝난 후, 저만의 리팩토링으로 프로젝트를 새롭게 빌드한 과정을 기술하였습니다.
+프로젝트가 끝난 후, 팀원 민지윤 개인의 리팩토링으로 프로젝트를 새롭게 빌드한 과정을 기술하였습니다.
 
 ## 1-1. 기존 장바구니, 결제방식의 한계 <br>
 
@@ -346,6 +346,10 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 리스트 객체를 생성하여 거기에 전체 계산 금액을 `add` 하고,<br>
 개별 객체만 불러와 영수계산 함수로 환산한 뒤
 다시 개별 배열에 `add`하여 한번에 `insert` 하는 방식으로 만들었습니다.
+
+## 2-4. 최종 결제완료 페이지
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/10b1ae6e-e8e6-4cfb-9e49-967d3bf14b74">
+
 
 # 🚀 3rd Refactoring : 3차 리팩토링 <a name = "refactoring3"></a>
 
