@@ -16,18 +16,11 @@
 	<script type="text/javascript">
 
 
-	<!-- 서영 네이버 키값 EZDnNCVQMTJNlWbDhjvv -->
-	<!-- 지윤 네이버 키값 P6wa8kR9Cvd1_JJOtheu -->
-	var naver_id_login = new naver_id_login("P6wa8kR9Cvd1_JJOtheu", "http://localhost:8181/moneybug/member/navercallback.jsp");
-		<!-- var naver_id_login = new naver_id_login("P6wa8kR9Cvd1_JJOtheu", "http://localhost:9091/moneybug/navercallback.jsp"); -->
-		<!-- var naver_id_login = new naver_id_login("P6wa8kR9Cvd1_JJOtheu", "http://localhost:8989/moneybug/navercallback.jsp"); -->
-		<!-- var naver_id_login = new naver_id_login("P6wa8kR9Cvd1_JJOtheu", "http://localhost:8080/moneybug/navercallback.jsp"); -->
+	var naver_id_login = new naver_id_login("xxx", "http://localhost:8181/moneybug/member/navercallback.jsp");
 
-			//alert(naver_id_login.oauthParams.access_token);
 			naver_id_login.get_naver_userprofile("naverSignInCallback()");
 			console.log('콜백실행')  
 		  
-		  // 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
 		 function naverSignInCallback() {
 
 			id = naver_id_login.getProfileData('id');

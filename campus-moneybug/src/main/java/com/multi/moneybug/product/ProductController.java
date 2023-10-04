@@ -105,7 +105,6 @@ public class ProductController {
 		return "product/orderlist";
 	}
 
-	//주문서로 이동
 	@PostMapping("product/orderlist")
 	public String submitOrder(
 		@RequestParam("totalAmount") String totalAmount,
@@ -153,13 +152,7 @@ public class ProductController {
 			model.addAttribute("selectedSeqs", selectedSeqs);
 			model.addAttribute("selectedIds", selectedIds);
 			model.addAttribute("memberDTO", memberDTO);
-		/*
-		 * System.out.println("newBasketList "+newBasketList); // basketDTO의 리스트형
-		 * System.out.println("newProductList "+newProductList); // productDTO의 리스트형
-		 * System.out.println("memberDTO "+memberDTO); // productDTO의 리스트형
-		 * System.out.println("selectedSeqs "+selectedSeqs); // 장바구니번호 리스트형
-		 * System.out.println("selectedIds "+selectedIds); // 상품번호 리스트형
-		 */			
+	
 			return "product/orderlist"; 
 		}
 
@@ -187,16 +180,13 @@ public class ProductController {
 		return "product/manageOrder"; // 주문 관리 페이지로 리다이렉트
 		}
 		
-	// 결제 후 결제내역 저장
 	@Transactional
 	@CrossOrigin
 	@PostMapping(value = "product/paySuccess", produces = "application/json")
 	@ResponseBody
 	public int payOrder(@RequestBody List<OrderItemsDTO> OrderItemsList, HttpSession session) throws Exception {
 
-		//1. order 신규쿼리생성
 		 OrderItemsDTO firstOrderItemsDTO = OrderItemsList.get(0);
-		//첫번째 배열만 사용 (공통되는 값들만 사용)
 		 OrderDTO orderDTO = new OrderDTO();
 		    orderDTO.setUserId(firstOrderItemsDTO.getUserId());
 		    orderDTO.setUserName(firstOrderItemsDTO.getUserName());
@@ -205,7 +195,6 @@ public class ProductController {
 		    orderDTO.setUsedPoint(firstOrderItemsDTO.getUsedPoint());
 		    orderDTO.setPayPrice(firstOrderItemsDTO.getPayPrice());
 	        
-		    // 동일한 주문에 대해 같은 ID를 사용하기 위해 저장
 	        String orderId = generateOrderId();
 	        session.setAttribute("orderId", orderId);
 	        orderDTO.setOrderId(orderId);
@@ -213,7 +202,6 @@ public class ProductController {
 			productService.payOrder(orderDTO);
 		
 			
-		//2. 포인트 마일리지 차감
 		MemberDTO memberDTO = memberService.selectByNickname(firstOrderItemsDTO.getUserNickname());
 		
 		int newPoint = memberDTO.getPoint() - firstOrderItemsDTO.getUsedPoint();
@@ -221,7 +209,6 @@ public class ProductController {
 		
 		memberService.usePoint(memberDTO);
 		
-		//3. 장바구니 업데이트
 		for (OrderItemsDTO basketOrderItemsDTO : OrderItemsList) {
 		    int seq = basketOrderItemsDTO.getSeq();
 		    BasketDTO basketDTO = basketService.getBasketBySeq(seq);
@@ -233,7 +220,6 @@ public class ProductController {
 		    }
 		}
 		
-		//4. 개별 영수금액 계산 및 order_discount 인서트
 		String orderIdforDiscount = (String) session.getAttribute("orderId");
 		int sellPriceSum = OrderItemsList.stream()
 		        .mapToInt(item -> item.getProductSellprice() * item.getProductQuantity())
@@ -244,7 +230,6 @@ public class ProductController {
 	        int productSellprice = orderItemsDTO.getProductSellprice();
 	        int productQuantity = orderItemsDTO.getProductQuantity();
 
-	        // indivDiscount 계산
 	        int indivDiscount = (int) (((double) (productSellprice * productQuantity) / sellPriceSum) * orderItemsDTO.getUsedPoint());
 
 	        int productCalprice = (productSellprice * productQuantity) - indivDiscount;
@@ -264,7 +249,6 @@ public class ProductController {
 		return 1;
 	}
 	
-	// 함수로 현재 날짜와 랜덤 숫자를 조합하여 생성하는 코드
 	private String generateOrderId() {
 	    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	    String currentDate = dateFormat.format(new Date());

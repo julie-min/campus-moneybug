@@ -1,6 +1,6 @@
 # 💰가계부 커뮤니티 웹사이트 MoneyBug
 
-<img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/67c2ee75-90bc-4078-a55e-821b7fb08709" >
+<img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/641a9f13-b678-4932-8d20-eaccd04c2e75" >
 
 # 🧭 [목차](#index) <a name = "index"></a>
 
@@ -118,27 +118,26 @@
 
 | **로그인, 마이페이지** |
 | :---------------------: |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/7986eba0-de4c-4773-81d2-13915e28453e" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/3452f143-3f87-4a02-889e-fc9920d9faaa" width="800"/> |
 | **굿즈 쇼핑몰** |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/145b78f1-115e-49ef-a95a-bba84a380329" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/6a7a8b5f-cb44-4413-8ded-e75827a9ed7f" width="800"/> |
 | **커뮤니티 게시판** |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/e744843e-1276-4e8f-879b-974756eff7b5" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/98747623-4b77-4bd4-a6e1-3c2d379a63ec" width="800"/> |
 | **가계부** |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/0353f278-8c31-4447-81e5-3b59aec75629" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/92cda725-8e3a-4147-8ccc-56f6e0e1d351" width="800"/> |
 | **결제** |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/0688ac54-796e-4e18-b967-d319743f9acb" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/4338a898-f916-46c2-8423-edf810794304" width="800"/> |
 | **관리자 페이지** |
-| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/98771d8f-70a7-45dd-9cb8-7b56d9bf14b9" width="800"/> |
+| <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/653dbf63-4a8b-4f22-9b1d-5f1f6c2578a7" width="800"/> |
 
 
 <br>
 
 ## 📝 ERD <a name = "erd"></a>
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/2c65db61-5752-4398-8575-2bbefedbb095">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/66b0fb7d-e3e1-423c-aa0a-37576c16b1eb">
 
 ## 🧠 Main Feature Diagram <a name = "diagram"></a>
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/b5f84af3-732f-4747-95f7-4796476bd261">
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/bdcafc2b-21be-41ae-8840-4bf7d0b9895d">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/735b0dd8-a289-423c-a2ea-9425f85e0c3a">
 
 ## 🎯 Pain Point (Login) <a name = "login"></a>
 ## 소셜로그인 코드, 어떻게 더 간단하고 깔끔하게 만들까?
@@ -148,7 +147,7 @@
 그러다 모든 로그인 루트를 통일하고 과정을 일원화하여 3가지 소셜로그인 API를 모두 사용하고,<br>
 편리성을 도모할 수 있었습니다.<br>
 네이버, 카카오의 경우 콜백페이지를 구성하여 데이터를 받았습니다. <br> 구글 로그인의 경우 JWT를 사용하여 파서하였습니다.<br>
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cef6a5e5-7aea-4c67-9ffd-1da6bbd9733a" > <br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/0ac1deba-130d-449d-8904-624e875509bf" > <br>
 각 API의 자체함수들은 서로 변수명도 다르고, 설령 같은 변수명이어도 의미가 달랐습니다.<br>
 먼저 로그인에 필요한 각각의 변수를 찾아 제3의 객체로 치환하였고, <br>그 과정을 `AJAX`를 통해 동일한 메서드로 유도하였습니다.<br>
 이러한 방식으로 무수히 많은 다양한 소셜로그인 API를 추가할 수 있을 것입니다.
@@ -196,7 +195,7 @@
 
 JSON 배열로 데이터를 전송하여 여러 개의 값이 동시에 넘어갈 수 있도록 하였습니다.
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/a94180fe-b2da-4f2d-896b-9c50284bd0e3"> <br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/a201644d-a162-4926-8dce-8c5aa74918cf"> <br>
 
 장바구니에서 상품선택은 물론 수량을 최종 확정할 수 있기 때문에, 필수적으로 리스트의 형태로 선택시마다 업데이트를 해주는 컨트롤러를 만들었습니다. 그리고 그 리스트를 주문서의 View에서 다시 분해하여 해당 요소들을 모두 나열한 뒤, 다시 결제에 필요한 요소들만 추려 JSON 배열로 서버에 전달하는 것입니다.
 
@@ -296,7 +295,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 아래 그림에서 보실 수 있듯, 기존 쇼핑몰 주문내역은 고객으로 하여금 의미없는 백엔드의 시퀀스 넘버를 보여주고 있고, 각 상품별 할인액을 도출하지 않고 있었습니다.
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/8c77a2ac-b875-4958-b621-73a961de41fa">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/fcb2c5bc-5ca5-4acc-8d76-a702def76d48">
 
 저는 이전 커리어로 네이버 D2C몰을(규모 월 10억이상) 직접 운영해봤고 ERP에 이커머스 로직을 도입한 경험도 있고, 카페24를 통해 브랜드몰을 제작한 경험도 있습니다. 이러한 경험으로 위 그림과 같이 여러개의 장바구니 번호와 할인금액이 1개의 주문목록에 나열되는 것은 이상한 방식이라고 생각이 들었습니다. 실제 쇼핑몰에서는 `할인`을 기준으로 기능을 세분화해야만 한다고 생각합니다.
 
@@ -310,7 +309,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 ## 2-2. 단계별 할인 적용과 계산
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/122ca473-ee9b-4c43-ae7c-f59d4277b44a">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/ce4d21f8-8487-4804-a14f-a1dc37153615">
 
 ```
 - 정가: PRODUCT_ORIPRICE
@@ -323,7 +322,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 이렇게 영수금액을 정하게 된 이유는,
 주문 단계에서 각 상품의 할인 금액이 마일리지(포인트) 사용에 따라 `동적으로` 결정되기 때문입니다.
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/ac22fbee-e05b-4db9-bc8c-6b63b7f17b76">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/beec860c-040f-44e5-9f5d-17aa9ff9cfeb">
 
 
 ① 기본적으로 모든 상품은 판매자가 1차 할인하여 상품목록에 게시된다. (최초 주문 금액)<br>
@@ -340,9 +339,9 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 결제와 동시에 모든 것들이 처리되는 구조상 이를 트랜잭션으로 설정하여<br>
 주문 신규 쿼리 처리와, 마일리지 차감, 장바구니 처리, 영수금액 함수계산을 동시에 진행하였습니다.
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/cc3aee34-2e0c-4c93-9860-8c145056d8e8"> <br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/e59ea06f-cbd2-40e3-b115-5f486a42eeeb"> <br>
 
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/29121d93-7824-427c-b4e2-a373fba0425f"> <br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/e1147a64-ce70-44b7-88e8-a014c7824d7f"> <br>
 
 신규 쿼리에 대한 부담과 번거로움을 줄이기 위해,<br>
 개별 리스트로 `insert` 후 전체 계산 금액을 `insert`  하는 방식에서 벗어나<br>
@@ -351,7 +350,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 다시 개별 배열에 `add`하여 한번에 `insert` 하는 방식으로 만들었습니다.
 
 ## 2-4. 최종 결제완료 페이지
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/d46be171-804b-414f-bfbd-8fdb8085693e">
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/41e5385f-ec11-4107-a58b-b428d33b9bea">
 
 
 # 🚀 3rd Refactoring : 3차 리팩토링 <a name = "refactoring3"></a>
@@ -380,5 +379,5 @@ public class ManagerService {
 여러 명의 관리자를 동시에 등록하고 로그인할 수 있는 페이지를 만들어 운영하게 됩니다.<br>
 
 ## 3-2. 최종 관리자 페이지
-<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/e27065c3-d21d-4f3d-a407-79f6fe942175"><br>
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/57315e69-a615-40cc-b302-e6621a461911"><br>
 

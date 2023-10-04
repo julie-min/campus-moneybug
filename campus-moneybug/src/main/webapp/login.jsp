@@ -100,10 +100,8 @@ p {
 
 
 			/* 네이버 로그인 버튼 노출 스크립트 */
-			/* 서영 네이버 키값 EZDnNCVQMTJNlWbDhjvv */
-			/* 지윤 네이버 키값 P6wa8kR9Cvd1_JJOtheu */
 
-			  	var naver_id_login = new naver_id_login("P6wa8kR9Cvd1_JJOtheu", "http://localhost:8181/moneybug/member/navercallback.jsp");
+			  	var naver_id_login = new naver_id_login("xxx", "http://localhost:8181/moneybug/member/navercallback.jsp");
 			  	var state = naver_id_login.getUniqState();
 			  	naver_id_login.setButton("green", 3,50);
 			  	naver_id_login.setDomain("http://localhost:8181");
@@ -113,13 +111,6 @@ p {
 			/* 구글 로그인 버튼 스크립트  */
 			function handleCredentialResponse(response) {
 				const responsePayload = parseJwt(response.credential);
-				console.log("google1")
-				console.log("ID: " + responsePayload.sub);
-			    console.log('Full Name: ' + responsePayload.name);
-			    console.log("Email: " + responsePayload.email); 
-
-			
-			    console.log("google2")
 
 			    $.ajax({
 				type: 'POST',
