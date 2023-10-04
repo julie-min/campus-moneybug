@@ -73,9 +73,10 @@ public class ProductController {
 
 	// 쇼핑 관리자 페이지 (관리자 상품 리스트 ajax)
 	@RequestMapping("product/manageList")
-	public void showManageList(ProductDTO productDTO,Model model) {
+	public String showManageList(ProductDTO productDTO,Model model) {
 		List<ProductDTO> productList = productService.list(productDTO);
 		model.addAttribute("productList", productList);
+		return "product/manageList";
 	}
 
 	// 쇼핑 관리자 페이지 (상품 추가폼으로 이동)
@@ -95,7 +96,7 @@ public class ProductController {
 	@RequestMapping("product/productInsert")
 	public String productInsert(ProductDTO productDTO) {
 		productService.insertNewProduct(productDTO);
-		return "redirect:../product/shopmanager.jsp";
+		return "product/shopmanager";
 	}
 
 	
@@ -277,7 +278,7 @@ public class ProductController {
 	@RequestMapping("product/manageDelete")
 	public String goManageDelete(int productId) {
 		productService.goManageDelete(productId);
-		return "redirect:../product/shopmanager.jsp";
+		return "product/shopmanager";
 	}
 	
 	// 쇼핑 관리자 페이지 (상품 수정폼으로 이동)
@@ -295,7 +296,7 @@ public class ProductController {
 	@RequestMapping("product/updateProducts")
 	public String updateById(ProductDTO productDTO) {
 		productService.updateProduct(productDTO);
-		return "redirect:../product/shopmanager.jsp";
+		return "product/shopmanager";
 	}
 
 	

@@ -41,6 +41,8 @@
 		<!--맴버 mybatis -->
 		<typeAlias type="com.multi.moneybug.member.MemberDTO"
 			alias="memberDTO"></typeAlias>
+		<typeAlias type="com.multi.moneybug.member.ManagerDTO"
+			alias="managerDTO"></typeAlias>
 
 		<!--상품 mybatis -->
 		<typeAlias type="com.multi.moneybug.product.ProductDTO"
@@ -76,6 +78,7 @@
 		<mapper resource="mapper/tagreplyMapper.xml" />
 
 		<mapper resource="mapper/memberMapper.xml" />
+		<mapper resource="mapper/managerMapper.xml" />
 
 		<mapper resource="mapper/productMapper.xml" />
 		<mapper resource="mapper/basketMapper.xml" />
