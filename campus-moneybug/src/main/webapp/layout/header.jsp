@@ -69,7 +69,7 @@ $(document).ready(function() {
 						<ul class="dropdown-menu">
 									<li><a class="dropdown-item" href="/moneybug/member/myPage.do">나의정보수정</a></li>
 									<li><a class="dropdown-item" href="/moneybug/logout.do">로그아웃</a></li>
-									<li><a class="dropdown-item" href="/moneybug/member/managerlogin.jsp">관리자 로그인</a></li>
+									<li><a class="dropdown-item" href="/moneybug/member/newManagerLoginSecurity.jsp">관리자 로그인</a></li>
 									<li><a class="dropdown-item" href="/moneybug/api/showButton">API키 관리</a></li>
 								</ul>
 					</li>
@@ -82,7 +82,7 @@ $(document).ready(function() {
 						data-toggle="dropdown" aria-expanded="false">로그인해주세요</a>
 						<ul class="dropdown-menu">
 							<li><a class="dropdown-item" href="${pageContext.request.contextPath}/login.jsp">회원 로그인</a></li>
-							<li><a class="dropdown-item" href="member/managerlogin.jsp">관리자 로그인</a></li>
+							<li><a class="dropdown-item" href="/moneybug/member/newManagerLoginSecurity.jsp">관리자 로그인</a></li>
 						</ul>
 					</li>
 				</c:otherwise>

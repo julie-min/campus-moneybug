@@ -14,6 +14,7 @@
 - [Retrospective 회고](#retrospective)  
 - [1st Refactoring : 리팩토링과 고민의 과정](#refactoring1)
 - [2nd Refactoring : 결제주문 디테일 완성](#refactoring2)
+- [3rd Refactoring : 스프링 시큐리티 도입](#refactoring3)
 
 <br>
 
@@ -23,7 +24,7 @@
 - 저렴한 대량 할인제품과 이벤트 제품을 판매하여 수익성을 도모하였습니다.
 - 서로의 지출 내용에 대해 함께 고민하고, 공유하며 게시글을 작성할 수 있습니다.
 - 13회차 Java 부트캠프 **파이널 최우수상을 수상**하였습니다.
-- 이 레포지토리는 `팀프로젝트` 완료 후 팀원 민지윤이 개인적으로 리팩토링한 내용이 함께 담겨있습니다.
+- 이 레포지토리는 `팀프로젝트` 완료 후 팀원 민지윤이 개인적으로 리팩토링한 내용이 담겨있습니다.
 
 <br>
 
@@ -39,6 +40,7 @@
 ### `Back-end`
 * Java 8
 * Spring Framework 5.0.1, Spring MVC
+* Spring Security 5
 * Maven
 * Mybatis
 * Eclipse, Visual Studio Code, DBeaver
@@ -75,6 +77,13 @@
 <details>
 <summary> 펼쳐서 확인 (👈 Click) </summary>
 
+* ##### `[민지윤] 소셜로그인, 쇼핑몰, 관리자페이지` 
+  * 네이버, 구글 소셜로그인
+  * 상품 쇼핑몰 게시판 CRUD
+  * 쇼핑몰 관리자페이지
+  * 상품 결제 (아임포트)
+  * Frontend UI 구현
+  
 * ##### `[강태헌] 커뮤니티 게시판`
   * 커뮤니티 게시판 CRUD
   * 댓글, 대댓글 CRUD
@@ -85,12 +94,6 @@
   * 월단위 사용한 내역 형식 보고서 산출
   * 보고서 파일 다운로드, 이메일 전송
 
-* ##### `[민지윤] 소셜로그인, 쇼핑몰`
-  * 네이버, 구글 소셜로그인
-  * 상품 쇼핑몰 게시판 CRUD
-  * 쇼핑몰 관리자페이지
-  * 상품 결제 (아임포트)
-  * Frontend UI 구현
 
 * ##### `[신현범] 가계부`
   * 영수증 OCR
@@ -295,7 +298,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/8c77a2ac-b875-4958-b621-73a961de41fa">
 
-저는 네이버 D2C몰을 직접 운영하고 ERP에 로직을 도입한 경험이 있고, 카페24를 통해 브랜드몰을 제작한 경험도 있습니다. 이러한 경험으로 위 그림과 같이 여러개의 장바구니 번호와 할인금액이 1개의 주문목록에 나열되는 것은 이상한 방식이라고 생각이 들었습니다. 실제 쇼핑몰에서는 `할인`을 기준으로 기능을 세분화해야만 한다고 생각합니다.
+저는 이전 커리어로 네이버 D2C몰을(규모 월 10억이상) 직접 운영해봤고 ERP에 이커머스 로직을 도입한 경험도 있고, 카페24를 통해 브랜드몰을 제작한 경험도 있습니다. 이러한 경험으로 위 그림과 같이 여러개의 장바구니 번호와 할인금액이 1개의 주문목록에 나열되는 것은 이상한 방식이라고 생각이 들었습니다. 실제 쇼핑몰에서는 `할인`을 기준으로 기능을 세분화해야만 한다고 생각합니다.
 
 예를들어 `최초주문금액`은 정가에서 `개별상품할인`금액을 빼고 배송비를 더한 금액이 됩니다. 이는 고객이 선택하지않아도 기본적으로 상품에 부과되는 기본 할인이며 `productDTO`에 포함될 것입니다.
 
@@ -305,7 +308,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 이를 위해서는 전반적인 페이지와 컨트롤러별 코드 흐름이 변경되어야 합니다.
 
-## 2-2. 계산서 금액을 제대로 구한다
+## 2-2. 단계별 할인 적용
 
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/122ca473-ee9b-4c43-ae7c-f59d4277b44a">
 
@@ -323,17 +326,17 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/ac22fbee-e05b-4db9-bc8c-6b63b7f17b76">
 
 
-1. 기본적으로 모든 상품은 판매자가 1차 할인하여 상품목록에 게시된다. (최초 주문 금액)
-2. 고객이 n개의 상품을 장바구니에 담고싶은 것만 담으면 주문번호 null로 해서 장바구니가 생긴다. <br>이때 1차 선택이 이루어지며, 상품과 장바구니는 일대일 관계일 것이다.
-3. 장바구니에서 다시 n개의 상품들을 선택(2차 선택)해서 주문서로 이동
-4. 주문서에서 자신의 포인트를 사용하여 2차 할인을 받게 된다.
-5. 전체 금액에서 포인트만큼 할인된 금액이 결제된다.
-6. 결제 완료시 장바구니 테이블에 해당 장바구니 번호들에 해당하는 데이터들에는 주문번호가 생기고 동시에 안보이게 처리된다.
-7. 주문테이블에는 주문번호가 생긴 데이터들의 행이 생긴다.
-8. 위에 적은 영수금액 계산 함수에 따라 각 상품금액의 실제 할인적용된 금액이 주문 히스토리에 저장된다.
+① 기본적으로 모든 상품은 판매자가 1차 할인하여 상품목록에 게시된다. (최초 주문 금액)<br>
+② 고객이 n개의 상품을 장바구니에 담고싶은 것만 담으면 주문번호 null로 해서 장바구니가 생긴다. <br>이때 1차 선택이 이루어지며, 상품과 장바구니는 일대일 관계일 것이다.<br>
+③ 장바구니에서 다시 n개의 상품들을 선택(2차 선택)해서 주문서로 이동 <br>
+④ 주문서에서 자신의 포인트를 사용하여 2차 할인을 받게 된다.<br>
+⑤ 전체 금액에서 포인트만큼 할인된 금액이 결제된다.<br>
+⑥ 결제 완료시 장바구니 테이블에 해당 장바구니 번호들에 해당하는 데이터들에는 주문번호가 생기고 동시에 안보이게 처리된다.<br>
+⑦ 주문테이블에는 주문번호가 생긴 데이터들의 행이 생긴다.<br>
+⑧ 위에 적은 영수금액 계산 함수에 따라 각 상품금액의 실제 할인적용된 금액이 주문 히스토리에 저장된다.
 
 
-## 2-3. DB 업데이트 및 트랜잭션 설정
+## 2-3. DB 업데이트 및 Transaction 설정
 결제와 동시에 모든 것들이 처리되는 구조상 이를 트랜잭션으로 설정하여<br>
 주문 신규 쿼리 처리와, 마일리지 차감, 장바구니 처리, 영수금액 함수계산을 동시에 진행하였습니다.
 
@@ -354,7 +357,27 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 # 🚀 3rd Refactoring : 3차 리팩토링 <a name = "refactoring3"></a>
 
 ## 3-1. Spring Security 적용
-세션으로 사용하고 있던 소셜로그인을 `Spring Security`를 도입하여 보안을 강화하였습니다.
+관리자 페이지에 `Spring Security`를 도입하여 보안을 강화하였습니다.<br>
+회원 소셜로그인 같은 경우는 웹페이지 자체 회원DB가 아예 없고, <br>DB내에 소셜 `token`외에는 보유하는 회원 개인정보가 없기 때문에 별도로 설정하지 않았습니다.<br>
+```javascript
+@Service
+public class ManagerService {
+	
+	@Autowired
+	BCryptPasswordEncoder passwordEncoder;
 
-## 3-2. Azure 배포
+	public boolean managerLogin(ManagerDTO managerDTO) {
+		String getPw = managerDAO.managerLogin(managerDTO);
+		if(passwordEncoder.matches(managerDTO.getManagerPassword(), getPw)) {
+			return true;
+		}
+		return false;
+	}
+```
+관리자에 시큐리티를 도입하기 위해 별도의 table을 만들었고, MVC를 새로 생성하였습니다.<br>
+`BCryptPasswordEncoder`를 통해 패스워드 `salt`암호화 하였습니다.<br>
+여러 명의 관리자를 동시에 등록하고 로그인할 수 있는 페이지를 만들어 운영하게 됩니다.<br>
+
+## 3-2. 최종 관리자 페이지
+<img src="https://github.com/julie-min/campus-moneybug/assets/130271406/e27065c3-d21d-4f3d-a407-79f6fe942175"><br>
 
