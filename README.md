@@ -1,4 +1,4 @@
-# 💰가계부 커뮤니티 MoneyBug
+# 💰가계부 커뮤니티 웹사이트 MoneyBug
 
 <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/67c2ee75-90bc-4078-a55e-821b7fb08709" >
 
@@ -12,9 +12,9 @@
 - [Diagram](#diagram)
 - [Pain Point](#login)
 - [Retrospective 회고](#retrospective)  
-- [1st Refactoring : 리팩토링과 고민의 과정](#refactoring1)
-- [2nd Refactoring : 결제주문 디테일 완성](#refactoring2)
-- [3rd Refactoring : 스프링 시큐리티 도입](#refactoring3)
+- ✅ [1st Refactoring : 리팩토링과 고민의 과정](#refactoring1)
+- ✅ [2nd Refactoring : 결제주문 디테일 완성](#refactoring2)
+- ✅ [3rd Refactoring : 스프링 시큐리티 도입](#refactoring3)
 
 <br>
 
@@ -141,7 +141,7 @@
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/bdcafc2b-21be-41ae-8840-4bf7d0b9895d">
 
 ## 🎯 Pain Point (Login) <a name = "login"></a>
-## 소셜로그인 코드, 어떻게 더 쉽고 깔끔하게 만들까?
+## 소셜로그인 코드, 어떻게 더 간단하고 깔끔하게 만들까?
 > 소셜로그인 루트 통일하여 다양한 API 받기
 
 이번 프로젝트에서는 원래 단일 소셜로그인만 기획하였습니다. <br>
@@ -308,7 +308,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 
 이를 위해서는 전반적인 페이지와 컨트롤러별 코드 흐름이 변경되어야 합니다.
 
-## 2-2. 단계별 할인 적용
+## 2-2. 단계별 할인 적용과 계산
 
 <img src="https://github.com/julie-min/campus-moneybug/assets/130271406/122ca473-ee9b-4c43-ae7c-f59d4277b44a">
 
@@ -359,6 +359,7 @@ public int payOrder(@RequestBody List<OrderListDTO> orderItems, HttpSession sess
 ## 3-1. Spring Security 적용
 관리자 페이지에 `Spring Security`를 도입하여 보안을 강화하였습니다.<br>
 회원 소셜로그인 같은 경우는 웹페이지 자체 회원DB가 아예 없고, <br>DB내에 소셜 `token`외에는 보유하는 회원 개인정보가 없기 때문에 별도로 설정하지 않았습니다.<br>
+다만 기존 관리자 로그인은 단순 비밀번호 일치여부를 자바스크립트로 확인하는 수준이었기에 <br> 다중 로그인이 가능하도록 DB를 마련하였습니다.
 ```javascript
 @Service
 public class ManagerService {
