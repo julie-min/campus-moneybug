@@ -93,7 +93,7 @@ p {
 
 		</div>
 		<hr>
-		<a class="btn btn-sm btn-outline-secondary" role="button" href="member/managerlogin.jsp">관리자로 로그인</a>
+		<a class="btn btn-sm btn-outline-secondary" role="button" href="/moneybug/member/newManagerLoginSecurity.jsp">관리자로 로그인</a>
 	</div>
 
 	<script type="text/javascript">
