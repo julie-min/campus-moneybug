@@ -221,9 +221,7 @@ public class ProductController {
 		}
 		
 		String orderIdforDiscount = (String) session.getAttribute("orderId");
-		int sellPriceSum = OrderItemsList.stream()
-		        .mapToInt(item -> item.getProductSellprice() * item.getProductQuantity())
-		        .sum();
+		int sellPriceSum = 0;
 
 	    for (OrderItemsDTO orderItemsDTO : OrderItemsList) {
 	        int productId = orderItemsDTO.getProductId();
