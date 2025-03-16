@@ -1,4 +1,4 @@
-# 💰가계부 커뮤니티 웹사이트 MoneyBug
+# 💰Financial Web Community : MoneyBug
 
 <img src ="https://github.com/julie-min/campus-moneybug/assets/130271406/641a9f13-b678-4932-8d20-eaccd04c2e75" >
 
